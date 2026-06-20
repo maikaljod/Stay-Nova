@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Booking confirmed — StayNova{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:640px;">
+  <div class="card center">
+    <div style="font-size:2.5rem;">&#9989;</div>
+    <h1>Booking confirmed!</h1>
+    <p style="color:var(--color-text-muted);">Confirmation #{{ booking.id }}</p>
+    <table class="mt-lg" style="text-align:left;">
+      <tr><th>Hotel</th><td>{{ booking.hotel_name }}</td></tr>
+      <tr><th>Room</th><td>{{ booking.room_type }}</td></tr>
+      <tr><th>Check-in</th><td>{{ booking.check_in }}</td></tr>
+      <tr><th>Check-out</th><td>{{ booking.check_out }}</td></tr>
+      <tr><th>Guests</th><td>{{ booking.guests }}</td></tr>
+      <tr><th>Total</th><td>${{ '%.2f'|format(booking.total_price) }}</td></tr>
+    </table>
+    <a class="btn btn-primary mt-lg" href="{{ url_for('booking.dashboard') }}">View my bookings</a>
+  </div>
+</section>
+{% endblock %}

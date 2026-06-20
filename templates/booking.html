@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Book {{ room.room_type }} — StayNova{% endblock %}
+{% block content %}
+<section class="section container" style="max-width:760px;">
+  <h1 class="section-title">Book your stay</h1>
+  <div class="room-card">
+    {% if room.image_url %}<img src="{{ room.image_url }}" alt="{{ room.room_type }}">{% endif %}
+    <div class="room-card-body">
+      <h3>{{ room.room_type }} — {{ room.hotel_name }}</h3>
+      <div class="hotel-meta">&#128205; {{ room.hotel_city }}</div>
+      <div class="price">${{ '%.2f'|format(room.price_per_night) }} <span>/ night</span></div>
+    </div>
+  </div>
+
+  <div class="card mt-lg">
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ form.room_id() }}
+      <div class="form-row">
+        <div class="form-group">
+          {{ form.check_in.label }}
+          {{ form.check_in(id="check_in") }}
+          {% for error in form.check_in.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+          {{ form.check_out.label }}
+          {{ form.check_out(id="check_out") }}
+          {% for error in form.check_out.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.guests.label }}
+        {{ form.guests(min=1, max=room.capacity) }}
+        {% for error in form.guests.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      {{ form.submit(class="btn btn-primary btn-block") }}
+    </form>
+  </div>
+</section>
+{% endblock %}
