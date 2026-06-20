@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ hotel.name }} — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <a href="{{ url_for('main.hotels') }}" class="btn-outline btn btn-sm" style="margin-bottom:20px;">&larr; Back to hotels</a>
+
+  {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}" style="width:100%;max-height:380px;object-fit:cover;border-radius:12px;margin-bottom:24px;">{% endif %}
+
+  <h1 class="section-title">{{ hotel.name }}</h1>
+  <div class="hotel-meta">&#128205; {{ hotel.address }}, {{ hotel.city }}</div>
+  <div class="stars">{{ ('&#9733;' * hotel.star_rating) | safe }}</div>
+
+  {% if hotel.amenities %}
+  <div class="mt-lg">
+    {% for amenity in hotel.amenities.split(',') %}
+      <span class="tag">{{ amenity.strip() }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <p class="mt-lg">{{ hotel.description }}</p>
+
+  <h2 class="section-title mt-lg">Available rooms</h2>
+  {% if rooms %}
+    {% for room in rooms %}
+    <div class="room-card">
+      {% if room.image_url %}<img src="{{ room.image_url }}" alt="{{ room.room_type }}">{% endif %}
+      <div class="room-card-body">
+        <h3>{{ room.room_type }}</h3>
+        <p style="color:var(--color-text-muted);margin:0;">{{ room.description }}</p>
+        <div class="hotel-meta">&#128100; Up to {{ room.capacity }} guests</div>
+        <div class="price">${{ '%.2f'|format(room.price_per_night) }} <span>/ night</span></div>
+      </div>
+      <div style="align-self:center;">
+        <a class="btn btn-primary" href="{{ url_for('booking.book_room', room_id=room.id) }}">Book now</a>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">No rooms configured for this hotel yet.</div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}StayNova — Find your perfect stay{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <h1>Find your next stay, effortlessly.</h1>
+    <p>Compare hotels across top destinations and book in minutes with StayNova.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="search-card">
+    <form action="{{ url_for('main.hotels') }}" method="get">
+      <div class="form-group">
+        <label for="city">Destination</label>
+        <input type="text" id="city" name="city" placeholder="City, e.g. Miami">
+      </div>
+      <div class="form-group">
+        <label for="check_in">Check-in</label>
+        <input type="date" id="check_in" name="check_in">
+      </div>
+      <div class="form-group">
+        <label for="check_out">Check-out</label>
+        <input type="date" id="check_out" name="check_out">
+      </div>
+      <div class="form-group">
+        <label for="guests">Guests</label>
+        <input type="number" id="guests" name="guests" min="1" max="20" value="2">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Search</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<section class="section container">
+  <h2 class="section-title">Featured hotels</h2>
+  <p class="section-subtitle">Hand-picked stays our guests love.</p>
+
+  {% if hotels %}
+  <div class="grid">
+    {% for hotel in hotels %}
+    <a class="hotel-card" href="{{ url_for('main.hotel_detail', hotel_id=hotel.id) }}">
+      {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}">{% endif %}
+      <div class="hotel-card-body">
+        <h3>{{ hotel.name }}</h3>
+        <div class="hotel-meta">&#128205; {{ hotel.city }}</div>
+        <div class="stars">{{ ('&#9733;' * hotel.star_rating) | safe }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">No hotels available yet. Check back soon.</div>
+  {% endif %}
+</section>
+{% endblock %}
