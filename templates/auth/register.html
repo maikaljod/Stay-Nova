@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Sign up — StayNova{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="card">
+    <div class="auth-header">
+      <h1>Create your account</h1>
+      <p>Book hotels faster with a free StayNova account.</p>
+    </div>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="form-row">
+        <div class="form-group">
+          {{ form.first_name.label }}
+          {{ form.first_name(placeholder="Jane") }}
+          {% for error in form.first_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+          {{ form.last_name.label }}
+          {{ form.last_name(placeholder="Doe") }}
+          {% for error in form.last_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.email.label }}
+        {{ form.email(placeholder="you@example.com", autocomplete="email") }}
+        {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.phone.label }}
+        {{ form.phone(placeholder="+1 555 123 4567") }}
+        {% for error in form.phone.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.password.label }}
+        {{ form.password(placeholder="At least 8 characters", autocomplete="new-password", id="password") }}
+        {% for error in form.password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      <div class="form-group">
+        {{ form.confirm_password.label }}
+        {{ form.confirm_password(placeholder="Repeat your password", autocomplete="new-password", id="confirm_password") }}
+        {% for error in form.confirm_password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      {{ form.submit(class="btn btn-primary btn-block") }}
+    </form>
+    <div class="auth-footer">
+      Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
