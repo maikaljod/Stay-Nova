@@ -1,12 +1,18 @@
-# Virtual Environment
+# Virtual environment
 venv/
+.venv/
 
 # Python cache
 __pycache__/
 *.pyc
+.pytest_cache/
 
-# Environment variables
+# Environment variables (never commit real secrets)
 .env
+
+# Flask instance folder (may hold local overrides)
+instance/*
+!instance/.gitkeep
 
 # VS Code settings
 .vscode/

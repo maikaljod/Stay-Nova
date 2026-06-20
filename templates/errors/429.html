@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Too many requests — StayNova{% endblock %}
+{% block content %}
+<section class="section container center">
+  <h1 style="font-size:4rem;margin-bottom:0;">429</h1>
+  <p>Too many requests. Please slow down and try again in a moment.</p>
+  <a class="btn btn-primary" href="{{ url_for('main.index') }}">Go home</a>
+</section>
+{% endblock %}

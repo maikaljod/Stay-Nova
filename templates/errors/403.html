@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Access denied — StayNova{% endblock %}
+{% block content %}
+<section class="section container center">
+  <h1 style="font-size:4rem;margin-bottom:0;">403</h1>
+  <p>You don't have permission to access this page.</p>
+  <a class="btn btn-primary" href="{{ url_for('main.index') }}">Go home</a>
+</section>
+{% endblock %}

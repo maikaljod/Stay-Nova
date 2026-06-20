@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Page not found — StayNova{% endblock %}
+{% block content %}
+<section class="section container center">
+  <h1 style="font-size:4rem;margin-bottom:0;">404</h1>
+  <p>The page you're looking for doesn't exist.</p>
+  <a class="btn btn-primary" href="{{ url_for('main.index') }}">Go home</a>
+</section>
+{% endblock %}
