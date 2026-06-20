@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}All bookings — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">All bookings</h1>
+  <table>
+    <thead><tr><th>Guest</th><th>Hotel</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Total</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for b in bookings %}
+      <tr>
+        <td>{{ b.first_name }} {{ b.last_name }} <br><small style="color:var(--color-text-muted);">{{ b.user_email }}</small></td>
+        <td>{{ b.hotel_name }}</td>
+        <td>{{ b.room_type }}</td>
+        <td>{{ b.check_in }}</td>
+        <td>{{ b.check_out }}</td>
+        <td>${{ '%.2f'|format(b.total_price) }}</td>
+        <td><span class="status-badge status-{{ b.status }}">{{ b.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

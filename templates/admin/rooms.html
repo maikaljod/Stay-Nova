@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Manage rooms — {{ hotel.name }}{% endblock %}
+{% block content %}
+<section class="section container">
+  <a href="{{ url_for('admin.hotels') }}" class="btn btn-outline btn-sm">&larr; Back to hotels</a>
+  <h1 class="section-title mt-lg">Rooms — {{ hotel.name }}</h1>
+
+  <div class="card">
+    <h2 style="margin-top:0;">Add a room</h2>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="form-group">{{ form.room_type.label }}{{ form.room_type() }}</div>
+      <div class="form-row">
+        <div class="form-group">{{ form.price_per_night.label }}{{ form.price_per_night() }}</div>
+        <div class="form-group">{{ form.capacity.label }}{{ form.capacity() }}</div>
+        <div class="form-group">{{ form.total_rooms.label }}{{ form.total_rooms() }}</div>
+      </div>
+      <div class="form-group">{{ form.image_url.label }}{{ form.image_url(placeholder="https://...") }}</div>
+      <div class="form-group">{{ form.description.label }}{{ form.description(rows=3) }}</div>
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+  </div>
+
+  <h2 class="mt-lg">Existing rooms</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Price/night</th><th>Capacity</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+      {% for room in rooms %}
+      <tr>
+        <td>{{ room.room_type }}</td>
+        <td>${{ '%.2f'|format(room.price_per_night) }}</td>
+        <td>{{ room.capacity }}</td>
+        <td>{{ room.total_rooms }}</td>
+        <td>
+          <form method="post" action="{{ url_for('admin.delete_room_route', room_id=room.id, hotel_id=hotel.id) }}" data-confirm="Delete this room type?">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

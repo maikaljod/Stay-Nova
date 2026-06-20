@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">Admin dashboard</h1>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="value">{{ stats.hotels }}</div><div class="label">Hotels</div></div>
+    <div class="stat-card"><div class="value">{{ stats.rooms }}</div><div class="label">Room types</div></div>
+    <div class="stat-card"><div class="value">{{ stats.users }}</div><div class="label">Users</div></div>
+    <div class="stat-card"><div class="value">{{ stats.bookings }}</div><div class="label">Active bookings</div></div>
+    <div class="stat-card"><div class="value">${{ '%.2f'|format(stats.revenue) }}</div><div class="label">Revenue</div></div>
+  </div>
+  <div class="flex-between">
+    <a class="btn btn-primary" href="{{ url_for('admin.hotels') }}">Manage hotels</a>
+    <a class="btn btn-outline" href="{{ url_for('admin.bookings') }}">View all bookings</a>
+  </div>
+</section>
+{% endblock %}
