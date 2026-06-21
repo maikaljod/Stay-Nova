@@ -3,6 +3,7 @@
 {% block content %}
 <section class="section container">
   <h1 class="section-title">All bookings</h1>
+  <div class="table-responsive">
   <table>
     <thead><tr><th>Guest</th><th>Hotel</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Total</th><th>Status</th></tr></thead>
     <tbody>
@@ -19,5 +20,6 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 </section>
 {% endblock %}

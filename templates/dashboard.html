@@ -4,6 +4,7 @@
 <section class="section container">
   <h1 class="section-title">My bookings</h1>
   {% if bookings %}
+  <div class="table-responsive">
   <table>
     <thead>
       <tr><th>Hotel</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Guests</th><th>Total</th><th>Status</th><th></th></tr>
@@ -30,6 +31,7 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
   {% else %}
   <div class="empty-state">You have no bookings yet. <a href="{{ url_for('main.hotels') }}">Browse hotels</a></div>
   {% endif %}
