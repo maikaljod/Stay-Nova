@@ -7,6 +7,21 @@ document.addEventListener("DOMContentLoaded", () => {
     toggle.addEventListener("click", () => links.classList.toggle("open"));
   }
 
+  // Dark mode toggle
+  const themeToggle = document.querySelector("#theme-toggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      if (isDark) {
+        document.documentElement.removeAttribute("data-theme");
+        localStorage.setItem("theme", "light");
+      } else {
+        document.documentElement.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+      }
+    });
+  }
+
   // Auto-dismiss flash messages
   document.querySelectorAll(".flash").forEach((flash) => {
     const closeBtn = flash.querySelector("button");
