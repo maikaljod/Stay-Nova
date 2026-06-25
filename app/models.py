@@ -3,6 +3,7 @@
 Every query below uses parameterized placeholders. No user input is ever
 interpolated directly into a SQL string.
 """
+import hashlib
 from datetime import datetime, timedelta
 
 from flask_login import UserMixin
@@ -12,6 +13,16 @@ from app.db import query, execute
 
 MAX_FAILED_LOGINS = 5
 LOCKOUT_MINUTES = 15
+
+
+def hash_token(raw_token):
+    """Hash a raw, single-use token (e.g. password reset) before storing it.
+
+    Tokens are already itsdangerous-signed and expiring; hashing before
+    storage means a database leak alone can't be used to reset a password,
+    the same defense-in-depth principle as hashing user passwords.
+    """
+    return hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
 
 
 class User(UserMixin):
@@ -28,6 +39,9 @@ class User(UserMixin):
         self.is_active_flag = bool(row.get("is_active", 1))
         self.failed_logins = row.get("failed_logins", 0)
         self.locked_until = row.get("locked_until")
+        self.email_verified = bool(row.get("email_verified", 0))
+        self.totp_secret = row.get("totp_secret")
+        self.totp_enabled_flag = bool(row.get("totp_enabled", 0))
 
     # Flask-Login expects get_id() to return a string
     def get_id(self):
@@ -40,6 +54,14 @@ class User(UserMixin):
     @property
     def is_admin(self):
         return self.role == "admin"
+
+    @property
+    def is_email_verified(self):
+        return self.email_verified
+
+    @property
+    def has_2fa_enabled(self):
+        return self.totp_enabled_flag
 
     @property
     def full_name(self):
@@ -98,6 +120,76 @@ def update_password(user_id, new_password):
     execute(
         "UPDATE users SET password_hash = %s WHERE id = %s",
         (generate_password_hash(new_password), user_id),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Email verification
+# ---------------------------------------------------------------------------
+
+def mark_email_verified(user_id):
+    execute("UPDATE users SET email_verified = 1 WHERE id = %s", (user_id,))
+
+
+# ---------------------------------------------------------------------------
+# Password reset
+# ---------------------------------------------------------------------------
+
+def set_reset_token(user_id, raw_token, expires_at):
+    execute(
+        "UPDATE users SET reset_token_hash = %s, reset_token_expires = %s WHERE id = %s",
+        (hash_token(raw_token), expires_at, user_id),
+    )
+
+
+def get_user_by_reset_token(raw_token):
+    """Look up a user by a raw reset token, honoring the stored expiry.
+
+    Returns None if no user has this (hashed) token pending, or if it has
+    expired server-side (independent of the itsdangerous signature's own
+    expiry check, which the caller performs separately).
+    """
+    row = query(
+        "SELECT * FROM users WHERE reset_token_hash = %s AND reset_token_expires > %s",
+        (hash_token(raw_token), datetime.utcnow()),
+        fetch="one",
+    )
+    return User(row) if row else None
+
+
+def clear_reset_token(user_id):
+    execute(
+        "UPDATE users SET reset_token_hash = NULL, reset_token_expires = NULL WHERE id = %s",
+        (user_id,),
+    )
+
+
+def reset_password(user_id, new_password):
+    """Set a new password and invalidate the reset token in one place."""
+    execute(
+        "UPDATE users SET password_hash = %s, reset_token_hash = NULL, "
+        "reset_token_expires = NULL, failed_logins = 0, locked_until = NULL WHERE id = %s",
+        (generate_password_hash(new_password), user_id),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Two-factor authentication (TOTP)
+# ---------------------------------------------------------------------------
+
+def set_totp_secret(user_id, secret):
+    """Stage a TOTP secret without enabling 2FA yet (until confirmed)."""
+    execute("UPDATE users SET totp_secret = %s WHERE id = %s", (secret, user_id))
+
+
+def enable_totp(user_id):
+    execute("UPDATE users SET totp_enabled = 1 WHERE id = %s", (user_id,))
+
+
+def disable_totp(user_id):
+    execute(
+        "UPDATE users SET totp_enabled = 0, totp_secret = NULL WHERE id = %s",
+        (user_id,),
     )
 
 
