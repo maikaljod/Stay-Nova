@@ -83,6 +83,25 @@ class RoomForm(FlaskForm):
     submit = SubmitField("Add room")
 
 
+class ResendVerificationForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired(), Email(), Length(max=120)])
+    submit = SubmitField("Resend verification email")
+
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired(), Email(), Length(max=120)])
+    submit = SubmitField("Send reset link")
+
+
+class ResetPasswordForm(FlaskForm):
+    new_password = PasswordField("New password", validators=[DataRequired(), PASSWORD_RULE])
+    confirm_new_password = PasswordField(
+        "Confirm new password",
+        validators=[DataRequired(), EqualTo("new_password", message="Passwords must match.")],
+    )
+    submit = SubmitField("Reset password")
+
+
 class ChangePasswordForm(FlaskForm):
     current_password = PasswordField("Current password", validators=[DataRequired()])
     new_password = PasswordField("New password", validators=[DataRequired(), PASSWORD_RULE])
@@ -91,3 +110,21 @@ class ChangePasswordForm(FlaskForm):
         validators=[DataRequired(), EqualTo("new_password", message="Passwords must match.")],
     )
     submit = SubmitField("Update password")
+
+
+TOTP_CODE_RULE = Regexp(r"^\d{6}$", message="Enter the 6-digit code from your authenticator app.")
+
+
+class TwoFactorSetupForm(FlaskForm):
+    code = StringField("Authentication code", validators=[DataRequired(), TOTP_CODE_RULE])
+    submit = SubmitField("Enable two-factor authentication")
+
+
+class TwoFactorVerifyForm(FlaskForm):
+    code = StringField("Authentication code", validators=[DataRequired(), TOTP_CODE_RULE])
+    submit = SubmitField("Verify")
+
+
+class TwoFactorDisableForm(FlaskForm):
+    current_password = PasswordField("Current password", validators=[DataRequired()])
+    submit = SubmitField("Disable two-factor authentication")
