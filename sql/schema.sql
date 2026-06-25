@@ -11,17 +11,25 @@ USE staynova;
 -- users
 -- ---------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
-    id              INT AUTO_INCREMENT PRIMARY KEY,
-    first_name      VARCHAR(60)  NOT NULL,
-    last_name       VARCHAR(60)  NOT NULL,
-    email           VARCHAR(120) NOT NULL UNIQUE,
-    phone           VARCHAR(20)  DEFAULT NULL,
-    password_hash   VARCHAR(255) NOT NULL,
-    role            ENUM('user', 'admin') NOT NULL DEFAULT 'user',
-    failed_logins   INT NOT NULL DEFAULT 0,
-    locked_until    DATETIME DEFAULT NULL,
-    is_active       TINYINT(1) NOT NULL DEFAULT 1,
-    created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                   INT AUTO_INCREMENT PRIMARY KEY,
+    first_name           VARCHAR(60)  NOT NULL,
+    last_name            VARCHAR(60)  NOT NULL,
+    email                VARCHAR(120) NOT NULL UNIQUE,
+    phone                VARCHAR(20)  DEFAULT NULL,
+    password_hash        VARCHAR(255) NOT NULL,
+    role                 ENUM('user', 'admin') NOT NULL DEFAULT 'user',
+    failed_logins        INT NOT NULL DEFAULT 0,
+    locked_until         DATETIME DEFAULT NULL,
+    is_active            TINYINT(1) NOT NULL DEFAULT 1,
+    -- Email verification
+    email_verified       TINYINT(1) NOT NULL DEFAULT 0,
+    -- Password reset (only a hash of the token is ever stored)
+    reset_token_hash      VARCHAR(64) DEFAULT NULL,
+    reset_token_expires  DATETIME DEFAULT NULL,
+    -- Two-factor authentication (TOTP)
+    totp_secret          VARCHAR(32) DEFAULT NULL,
+    totp_enabled         TINYINT(1) NOT NULL DEFAULT 0,
+    created_at           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_users_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

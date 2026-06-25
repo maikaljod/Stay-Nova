@@ -51,6 +51,25 @@ class Config:
     MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # 2 MB request body cap
     RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
 
+    # --- Outgoing email ---------------------------------------------------
+    # If MAIL_SERVER is unset (the default), emails are written to
+    # instance/outbox/ instead of actually being sent, so the app works
+    # out of the box without a real mail server configured.
+    MAIL_SERVER = os.environ.get("MAIL_SERVER")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
+    MAIL_USE_TLS = _bool_env("MAIL_USE_TLS", True)
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", "no-reply@staynova.com")
+
+    # Used to build absolute links inside emails (verify/reset).
+    APP_BASE_URL = os.environ.get("APP_BASE_URL", "http://127.0.0.1:5000")
+
+    # --- Account security: email verification / password reset / 2FA -----
+    EMAIL_VERIFICATION_MAX_AGE = int(os.environ.get("EMAIL_VERIFICATION_MAX_AGE", 60 * 60 * 24))  # 24h
+    PASSWORD_RESET_MAX_AGE = int(os.environ.get("PASSWORD_RESET_MAX_AGE", 60 * 60))  # 1h
+    TOTP_ISSUER_NAME = os.environ.get("TOTP_ISSUER_NAME", "StayNova")
+
 
 class DevelopmentConfig(Config):
     ENV = "development"

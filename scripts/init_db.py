@@ -97,8 +97,8 @@ def seed_data(conn):
         cur.execute("SELECT COUNT(*) AS c FROM users WHERE email = %s", (ADMIN_EMAIL,))
         if cur.fetchone()["c"] == 0:
             cur.execute(
-                """INSERT INTO users (first_name, last_name, email, password_hash, role, is_active)
-                   VALUES (%s, %s, %s, %s, %s, 1)""",
+                """INSERT INTO users (first_name, last_name, email, password_hash, role, is_active, email_verified)
+                   VALUES (%s, %s, %s, %s, %s, 1, 1)""",
                 ("Site", "Admin", ADMIN_EMAIL, generate_password_hash(ADMIN_PASSWORD), "admin"),
             )
             print(f"Admin account created -> email: {ADMIN_EMAIL}  password: {ADMIN_PASSWORD}")
