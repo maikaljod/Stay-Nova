@@ -7,6 +7,12 @@ StayNova is a secure hotel booking web application built with Flask, MySQL
 
 - User registration & login with hashed passwords, account lockout after
   repeated failed attempts, and rate-limited login endpoint
+- Email verification on signup (signed, expiring token; resend flow)
+- Self-service password reset via emailed, single-use, expiring link
+- Optional two-factor authentication (TOTP, compatible with Google
+  Authenticator / Authy / 1Password) with QR-code enrollment
+- Rate limiting on all sensitive account endpoints (login, register,
+  password reset, resend verification, 2FA)
 - CSRF protection on every form (Flask-WTF)
 - Secure session cookies (HttpOnly, SameSite) and security response headers
 - Hotel search/browse, hotel detail pages, room booking with availability
@@ -28,9 +34,14 @@ app/                Flask application package
   models.py          data-access functions + Flask-Login User wrapper
   forms.py           WTForms definitions with validation
   security.py        admin_required decorator
-instance/            local-only overrides (not committed)
+  email_utils.py     outgoing email helper (dev outbox fallback)
+  tokens.py          signed, expiring tokens (verify email / reset password)
+  twofactor.py       TOTP secret generation, QR code, code verification
+instance/            local-only overrides (not committed); outbox/ holds
+                     dev-mode emails when MAIL_SERVER isn't configured
 scripts/init_db.py   creates the database/tables and seeds sample data
 sql/schema.sql       MySQL schema (users, hotels, rooms, bookings)
+sql/migrations/      incremental ALTER TABLE scripts for existing databases
 static/              css/js assets
 templates/           Jinja2 templates
 test/test.py         smoke tests
@@ -91,11 +102,25 @@ run.py               application entry point
   of user input.
 - CSRF tokens are required on every state-changing form.
 - Login is rate-limited (10/minute per IP) and accounts lock for 15 minutes
-  after 5 consecutive failed attempts.
+  after 5 consecutive failed attempts. Registration, password reset, resend
+  verification, and 2FA code checks are rate-limited too.
 - Session cookies are HttpOnly/SameSite=Lax; set `SESSION_COOKIE_SECURE=true`
   once the app is served over HTTPS.
-- Generic error messages are used on login/registration so the app doesn't
-  reveal whether a given email is registered.
+- Generic error messages are used on login/registration/forgot-password so
+  the app doesn't reveal whether a given email is registered.
+- Email verification, password-reset links, and 2FA:
+  - New accounts must verify their email (signed `itsdangerous` token, 24h
+    expiry) before they can log in. Accounts that existed before this
+    feature was added are grandfathered in via the migration script.
+  - Password reset links are signed + expiring (1h) *and* single-use — a
+    hash of the token is stored server-side and cleared the moment it's
+    used, so a link can't be replayed even before it expires.
+  - Two-factor authentication is TOTP-based (RFC 6238) and optional
+    per-account; the shared secret is never shown again after setup, and
+    disabling it requires re-entering the current password.
+  - In development, no real mail server is required — verification and
+    reset emails are written to `instance/outbox/` instead of being sent
+    (see `.env.example` for `MAIL_SERVER` and friends to send real email).
 
 ## Tests
 

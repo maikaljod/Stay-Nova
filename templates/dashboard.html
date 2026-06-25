@@ -2,7 +2,13 @@
 {% block title %}My bookings — StayNova{% endblock %}
 {% block content %}
 <section class="section container">
-  <h1 class="section-title">My bookings</h1>
+  <div class="flex-between">
+    <h1 class="section-title">My bookings</h1>
+    <div>
+      <a class="btn btn-outline btn-sm" href="{{ url_for('auth.change_password') }}">Change password</a>
+      <a class="btn btn-outline btn-sm" href="{{ url_for('auth.two_factor_setup') }}">Two-factor authentication</a>
+    </div>
+  </div>
   {% if bookings %}
   <div class="table-responsive">
   <table>

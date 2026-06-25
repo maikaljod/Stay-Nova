@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Two-factor verification — StayNova{% endblock %}
+{% block content %}
+<div class="auth-glass-page">
+  <div class="auth-wrapper">
+    <div class="card glass-card">
+      <div class="auth-header">
+        <h1>Enter your authentication code</h1>
+        <p>Open your authenticator app and enter the current 6-digit code.</p>
+      </div>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="form-group">
+          {{ form.code.label }}
+          {{ form.code(placeholder="123456", autocomplete="one-time-code", inputmode="numeric", maxlength=6) }}
+          {% for error in form.code.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        {{ form.submit(class="btn btn-primary btn-block") }}
+      </form>
+      <form method="post" action="{{ url_for('auth.two_factor_cancel') }}" class="mt-lg">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-outline btn-block">Cancel and go back to log in</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

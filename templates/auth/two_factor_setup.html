@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Two-factor authentication — StayNova{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <div class="card">
+    <div class="auth-header"><h1>Two-factor authentication</h1></div>
+
+    {% if enabled %}
+      <p class="center">Two-factor authentication is <strong>enabled</strong> on your account.</p>
+      <form method="post" class="mt-lg">
+        {{ disable_form.hidden_tag() }}
+        <div class="form-group">
+          {{ disable_form.current_password.label }}
+          {{ disable_form.current_password(autocomplete="current-password") }}
+          {% for error in disable_form.current_password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        {{ disable_form.submit(class="btn btn-danger btn-block") }}
+      </form>
+    {% else %}
+      <p>Scan this QR code with an authenticator app (Google Authenticator, Authy, 1Password, etc.), then enter the 6-digit code it shows to finish setup.</p>
+      <div class="center mt-lg">
+        <img src="{{ qr_data_uri }}" alt="Two-factor authentication QR code" style="width:200px;height:200px;">
+      </div>
+      <p class="center" style="font-size:0.85rem;color:var(--color-text-muted);">
+        Can't scan it? Enter this key manually: <code>{{ secret }}</code>
+      </p>
+      <form method="post" class="mt-lg">
+        {{ setup_form.hidden_tag() }}
+        <div class="form-group">
+          {{ setup_form.code.label }}
+          {{ setup_form.code(placeholder="123456", autocomplete="one-time-code", inputmode="numeric", maxlength=6) }}
+          {% for error in setup_form.code.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        {{ setup_form.submit(class="btn btn-primary btn-block") }}
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
