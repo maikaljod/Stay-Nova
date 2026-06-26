@@ -1,0 +1,15 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="StayNova logo">
+  <defs>
+    <linearGradient id="staynova-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a56db"/>
+      <stop offset="55%" stop-color="#5b3fc9"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#staynova-bg)"/>
+  <!-- roof / "stay" -->
+  <path d="M28 80 L64 46 L100 80 L100 94 L28 94 Z" fill="#ffffff" opacity="0.96"/>
+  <rect x="46" y="70" width="16" height="24" fill="url(#staynova-bg)"/>
+  <!-- sparkle / "nova" -->
+  <path d="M93 18 L97.5 29.5 L109 34 L97.5 38.5 L93 50 L88.5 38.5 L77 34 L88.5 29.5 Z" fill="#ffffff"/>
+</svg>
