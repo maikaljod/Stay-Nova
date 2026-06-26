@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}StayNova — Find your perfect stay{% endblock %}</title>
   <meta name="description" content="StayNova — book hotels quickly and securely.">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <script>
     (function () {
@@ -17,7 +18,10 @@
 <body>
   <nav class="navbar">
     <div class="navbar-inner">
-      <a class="brand" href="{{ url_for('main.index') }}">StayNova</a>
+      <a class="brand" href="{{ url_for('main.index') }}">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="30" height="30" class="brand-logo">
+        StayNova
+      </a>
       <div class="navbar-right">
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
           <span class="icon-moon">&#127769;</span>
@@ -65,9 +69,33 @@
   </main>
 
   <footer class="footer">
-    <div class="container">
+    <div class="container footer-grid">
+      <div class="footer-col footer-brand">
+        <div class="footer-logo">
+          <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="26" height="26">
+          <span>StayNova</span>
+        </div>
+        <p>Find and book your perfect stay, anywhere.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="{{ url_for('main.about') }}">About us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="{{ url_for('main.help_center') }}">Help center</a></li>
+          <li><a href="{{ url_for('main.safety_tips') }}">Safety tips</a></li>
+          <li><a href="{{ url_for('main.accessibility') }}">Accessibility</a></li>
+          <li><a href="{{ url_for('main.cancellations') }}">Cancellations</a></li>
+          <li><a href="{{ url_for('main.contact_us') }}">Contact us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
       <span>&copy; {{ 2026 }} StayNova. All rights reserved.</span>
-      <span><a href="{{ url_for('main.about') }}">About</a></span>
     </div>
   </footer>
 
