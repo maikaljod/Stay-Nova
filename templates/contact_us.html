@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Contact us — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">Contact us</h1>
+  <p class="section-subtitle">We're happy to help with bookings, your account, or anything else.</p>
+
+  <div class="grid mt-lg">
+    <div class="card">
+      <h3>Email support</h3>
+      <p class="hotel-meta">support@staynova.com</p>
+      <p>For account issues, booking questions, or general feedback. We aim to reply within one business day.</p>
+    </div>
+    <div class="card">
+      <h3>Help center</h3>
+      <p>Check <a href="{{ url_for('main.help_center') }}">Help center</a> first — many common questions about
+         bookings and your account are answered there.</p>
+    </div>
+    <div class="card">
+      <h3>Safety concerns</h3>
+      <p>For anything safety-related, see our <a href="{{ url_for('main.safety_tips') }}">Safety tips</a> page,
+         or contact the property directly for issues during an active stay.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

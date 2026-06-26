@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Help center — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">Help center</h1>
+  <p class="section-subtitle">Answers to the questions we hear most often.</p>
+
+  <div class="card mt-lg">
+    <h3>Booking a room</h3>
+    <p>Search for a destination and dates on the Hotels page, open a hotel you like, and choose a room to book.
+       You'll see live availability before you confirm — no payment surprises after the fact.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Managing your bookings</h3>
+    <p>Every booking you make is listed under <strong>My bookings</strong> once you're logged in. From there you
+       can review your stay details or cancel an upcoming reservation.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Account & security</h3>
+    <p>You can change your password, and enable two-factor authentication from your account settings on the
+       My bookings page. New accounts need to verify their email before their first login.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Still need help?</h3>
+    <p>Reach us any time via <a href="{{ url_for('main.contact_us') }}">Contact us</a>.</p>
+  </div>
+</section>
+{% endblock %}

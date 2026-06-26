@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Accessibility — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">Accessibility</h1>
+  <p class="section-subtitle">Our commitment to making StayNova usable for everyone.</p>
+
+  <div class="card mt-lg">
+    <h3>Our commitment</h3>
+    <p>We want everyone to be able to search, book, and manage their stays on StayNova, regardless of ability.
+       We aim to meet WCAG 2.1 AA guidelines across the site and keep improving as we grow.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>What we've built in</h3>
+    <p>Semantic HTML and labeled form fields for screen readers, keyboard-navigable menus and forms, visible
+       focus states, and sufficient color contrast in both light and dark mode.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Let us know</h3>
+    <p>If you run into anything on StayNova that's difficult to use with assistive technology, please tell us
+       via <a href="{{ url_for('main.contact_us') }}">Contact us</a> — accessibility feedback helps us prioritize fixes.</p>
+  </div>
+</section>
+{% endblock %}

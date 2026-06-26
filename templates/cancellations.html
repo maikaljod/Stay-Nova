@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Cancellations — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">Cancellations</h1>
+  <p class="section-subtitle">How to cancel a booking, and what to expect.</p>
+
+  <div class="card mt-lg">
+    <h3>How to cancel</h3>
+    <p>Go to <strong>My bookings</strong> while logged in. Any upcoming, confirmed reservation shows a
+       <strong>Cancel</strong> button — past bookings and stays that have already checked in can't be cancelled
+       from there.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>What happens next</h3>
+    <p>Once cancelled, a booking's status changes to <span class="status-badge status-cancelled">cancelled</span>
+       and the room becomes available again for other guests over those dates. This is immediate and can't be undone
+       from your dashboard, so double-check the booking before confirming.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Refunds</h3>
+    <p>This is a demo booking platform — no real payments are processed, so there's nothing to refund. In a
+       production setting, refund timing and any cancellation fees would depend on the individual hotel's policy.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Need help with a cancellation?</h3>
+    <p>If something doesn't look right with a booking, reach out via <a href="{{ url_for('main.contact_us') }}">Contact us</a>.</p>
+  </div>
+</section>
+{% endblock %}
