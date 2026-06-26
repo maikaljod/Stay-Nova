@@ -36,3 +36,28 @@ def hotel_detail(hotel_id):
 @main_bp.route("/about")
 def about():
     return render_template("about.html")
+
+
+@main_bp.route("/help-center")
+def help_center():
+    return render_template("help_center.html")
+
+
+@main_bp.route("/safety-tips")
+def safety_tips():
+    return render_template("safety_tips.html")
+
+
+@main_bp.route("/accessibility")
+def accessibility():
+    return render_template("accessibility.html")
+
+
+@main_bp.route("/cancellations")
+def cancellations():
+    return render_template("cancellations.html")
+
+
+@main_bp.route("/contact-us")
+def contact_us():
+    return render_template("contact_us.html")
