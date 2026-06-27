@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Privacy notice — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">Privacy notice</h1>
+  <p class="section-subtitle">What we collect, and how we use it.</p>
+
+  <div class="card mt-lg">
+    <h3>Information we collect</h3>
+    <p>When you create an account, we collect your name, email address, phone number (optional), and a securely
+       hashed version of your password — never the password itself. When you book a room, we store the booking
+       details needed to fulfill it: dates, guest count, and the room and hotel involved.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>How we use it</h3>
+    <p>Your information is used to operate your account, process bookings, send account-related emails (email
+       verification, password resets, booking confirmations), and secure your account, including optional
+       two-factor authentication.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>How we protect it</h3>
+    <p>Passwords are hashed, never stored in plain text. Sensitive tokens (password reset links) are hashed before
+       storage. All traffic should be served over HTTPS in production, and session cookies are set HttpOnly and
+       SameSite to reduce exposure to common web attacks.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Your choices</h3>
+    <p>You can update your password, enable or disable two-factor authentication, and review or cancel your
+       bookings at any time from your account. For any other request regarding your data, contact us.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Questions?</h3>
+    <p>Reach out via <a href="{{ url_for('main.contact_us') }}">Contact us</a>.</p>
+  </div>
+</section>
+{% endblock %}

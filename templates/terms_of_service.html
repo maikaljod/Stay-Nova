@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Terms of service — StayNova{% endblock %}
+{% block content %}
+<section class="section container">
+  <h1 class="section-title">Terms of service</h1>
+  <p class="section-subtitle">The basics of using StayNova.</p>
+
+  <div class="card mt-lg">
+    <h3>Your account</h3>
+    <p>You're responsible for keeping your login credentials secure and for all activity under your account.
+       Please verify your email after registering, and consider enabling two-factor authentication for extra
+       protection.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Bookings</h3>
+    <p>A booking is confirmed once it's created and subject to the room's availability at the time. You can cancel
+       an upcoming, confirmed booking from your dashboard; cancellation immediately releases the room back into
+       availability.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Acceptable use</h3>
+    <p>Don't attempt to bypass rate limits, probe for vulnerabilities, or use automated tools to scrape or abuse
+       the platform. Accounts found doing so may be suspended.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Changes</h3>
+    <p>We may update these terms from time to time as the platform evolves. Continued use of StayNova after a
+       change means you accept the updated terms.</p>
+  </div>
+
+  <div class="card mt-lg">
+    <h3>Questions?</h3>
+    <p>Reach out via <a href="{{ url_for('main.contact_us') }}">Contact us</a>.</p>
+  </div>
+</section>
+{% endblock %}
