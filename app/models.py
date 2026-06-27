@@ -201,6 +201,21 @@ def get_all_hotels():
     return query("SELECT * FROM hotels ORDER BY name")
 
 
+def get_trending_hotels(limit=4):
+    """Hotels for the homepage "trending destinations" strip, each with its
+    cheapest available room price (None if the hotel has no rooms yet)."""
+    return query(
+        """SELECT hotels.id, hotels.name, hotels.city, hotels.image_url, hotels.star_rating,
+                  MIN(rooms.price_per_night) AS from_price
+           FROM hotels
+           LEFT JOIN rooms ON rooms.hotel_id = hotels.id
+           GROUP BY hotels.id, hotels.name, hotels.city, hotels.image_url, hotels.star_rating
+           ORDER BY hotels.star_rating DESC, hotels.name ASC
+           LIMIT %s""",
+        (limit,),
+    )
+
+
 def search_hotels(city=None, guests=None):
     sql = "SELECT * FROM hotels WHERE 1=1"
     params = []

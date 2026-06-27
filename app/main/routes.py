@@ -2,7 +2,9 @@
 from flask import Blueprint, render_template, request
 
 from app.forms import SearchForm
-from app.models import get_all_hotels, search_hotels, get_hotel_by_id, get_rooms_by_hotel
+from app.models import (
+    get_all_hotels, search_hotels, get_hotel_by_id, get_rooms_by_hotel, get_trending_hotels,
+)
 
 main_bp = Blueprint("main", __name__)
 
@@ -11,7 +13,8 @@ main_bp = Blueprint("main", __name__)
 def index():
     form = SearchForm()
     hotels = get_all_hotels()[:6]
-    return render_template("index.html", hotels=hotels, form=form)
+    trending = get_trending_hotels(limit=4)
+    return render_template("index.html", hotels=hotels, form=form, trending=trending)
 
 
 @main_bp.route("/hotels")
@@ -61,3 +64,13 @@ def cancellations():
 @main_bp.route("/contact-us")
 def contact_us():
     return render_template("contact_us.html")
+
+
+@main_bp.route("/privacy-notice")
+def privacy_notice():
+    return render_template("privacy_notice.html")
+
+
+@main_bp.route("/terms-of-service")
+def terms_of_service():
+    return render_template("terms_of_service.html")
