@@ -4,7 +4,7 @@
 <section class="section container">
   <a href="{{ url_for('main.hotels') }}" class="btn-outline btn btn-sm" style="margin-bottom:20px;">&larr; Back to hotels</a>
 
-  {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}" style="width:100%;max-height:380px;object-fit:cover;border-radius:12px;margin-bottom:24px;">{% endif %}
+  {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}" class="hotel-hero-img">{% endif %}
 
   <h1 class="section-title">{{ hotel.name }}</h1>
   <div class="hotel-meta">&#128205; {{ hotel.address }}, {{ hotel.city }}</div>
