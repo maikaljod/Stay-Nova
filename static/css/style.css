@@ -57,6 +57,12 @@ html, body {
   padding: 0;
 }
 
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
 body {
   font-family: "Segoe UI", "Inter", system-ui, -apple-system, sans-serif;
   color: var(--color-text);
@@ -315,6 +321,63 @@ input:focus, select:focus, textarea:focus {
 
 .hotel-card img { height: 190px; object-fit: cover; width: 100%; }
 
+/* ---------- Flip cards (hotel listings) ---------- */
+.flip-card {
+  background: transparent;
+  perspective: 1200px;
+  height: 340px;
+  display: block;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.flip-card:hover .flip-card-inner,
+.flip-card.is-flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card:hover { box-shadow: var(--shadow-lg); }
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.flip-card-front img { height: 190px; object-fit: cover; width: 100%; flex-shrink: 0; }
+
+.flip-card-back {
+  transform: rotateY(180deg);
+  padding: 22px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.flip-card-back h3 { margin: 0; font-size: 1.1rem; }
+.flip-card-back p { margin: 0; color: var(--color-text-muted); font-size: 0.9rem; flex: 1; overflow: hidden; }
+.flip-card-back .btn { align-self: flex-start; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-card-inner { transition: none; }
+}
+
 /* ---------- Hotel detail hero image ---------- */
 .hotel-hero-img {
   width: 100%;
@@ -514,6 +577,22 @@ tr:last-child td { border-bottom: none; }
 .mt-lg { margin-top: 32px; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 
+/* ---------- Scroll-reveal ---------- */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal { opacity: 1; transform: none; transition: none; }
+}
+
 /* ---------- Glassmorphism (auth pages) ---------- */
 .auth-glass-page {
   flex: 1;
@@ -544,6 +623,36 @@ tr:last-child td { border-bottom: none; }
   border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
   color: #fff;
+}
+
+.auth-animate-in {
+  animation: authCardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes authCardIn {
+  0% { opacity: 0; transform: translateY(28px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.auth-animate-in .form-group {
+  animation: authFieldIn 0.5s ease both;
+}
+
+.auth-animate-in .form-group:nth-of-type(1) { animation-delay: 0.12s; }
+.auth-animate-in .form-group:nth-of-type(2) { animation-delay: 0.18s; }
+.auth-animate-in .form-group:nth-of-type(3) { animation-delay: 0.24s; }
+.auth-animate-in .form-group:nth-of-type(4) { animation-delay: 0.3s; }
+.auth-animate-in .form-group:nth-of-type(5) { animation-delay: 0.36s; }
+.auth-animate-in .form-group:nth-of-type(6) { animation-delay: 0.42s; }
+
+@keyframes authFieldIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-animate-in,
+  .auth-animate-in .form-group { animation: none; }
 }
 
 .glass-card .auth-header h1 { color: #fff; }
