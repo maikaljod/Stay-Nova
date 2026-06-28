@@ -68,4 +68,39 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // Scroll-reveal: fade/slide elements in as they enter the viewport
+  const revealTargets = document.querySelectorAll(".scroll-reveal");
+  if (revealTargets.length) {
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in-view");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      revealTargets.forEach((el) => observer.observe(el));
+    } else {
+      // No IntersectionObserver support: just show everything immediately
+      revealTargets.forEach((el) => el.classList.add("in-view"));
+    }
+  }
+
+  // Flip cards: hover already flips on desktop; tap-to-flip for touch devices
+  document.querySelectorAll(".flip-card").forEach((card) => {
+    card.addEventListener("click", (e) => {
+      if (!window.matchMedia("(hover: none)").matches) return; // desktop: let :hover handle it
+      if (card.classList.contains("is-flipped")) return; // already flipped, allow the link through
+      e.preventDefault();
+      document.querySelectorAll(".flip-card.is-flipped").forEach((other) => {
+        if (other !== card) other.classList.remove("is-flipped");
+      });
+      card.classList.add("is-flipped");
+    });
+  });
 });
