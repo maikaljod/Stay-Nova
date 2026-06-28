@@ -28,12 +28,21 @@
   {% if hotels %}
   <div class="grid mt-lg">
     {% for hotel in hotels %}
-    <a class="hotel-card" href="{{ url_for('main.hotel_detail', hotel_id=hotel.id) }}">
-      {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}">{% endif %}
-      <div class="hotel-card-body">
-        <h3>{{ hotel.name }}</h3>
-        <div class="hotel-meta">&#128205; {{ hotel.city }}</div>
-        <div class="stars">{{ ('&#9733;' * hotel.star_rating) | safe }}</div>
+    <a class="flip-card scroll-reveal" href="{{ url_for('main.hotel_detail', hotel_id=hotel.id) }}">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}">{% endif %}
+          <div class="hotel-card-body">
+            <h3>{{ hotel.name }}</h3>
+            <div class="hotel-meta">&#128205; {{ hotel.city }}</div>
+            <div class="stars">{{ ('&#9733;' * hotel.star_rating) | safe }}</div>
+          </div>
+        </div>
+        <div class="flip-card-back">
+          <h3>{{ hotel.name }}</h3>
+          <p>{{ hotel.description or "Discover this hotel's rooms and amenities." }}</p>
+          <span class="btn btn-primary btn-sm">View details</span>
+        </div>
       </div>
     </a>
     {% endfor %}
