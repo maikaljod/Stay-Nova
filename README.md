@@ -121,6 +121,25 @@ run.py               application entry point
   - In development, no real mail server is required — verification and
     reset emails are written to `instance/outbox/` instead of being sent
     (see `.env.example` for `MAIL_SERVER` and friends to send real email).
+- Password hashing uses an explicit, configurable method (`PASSWORD_HASH_METHOD`
+  in `.env`, default `scrypt`) via a single `hash_password()` helper in
+  `app/models.py`, rather than relying on whatever Werkzeug happens to
+  default to.
+- Redirects: any `next=` query parameter (used after login/2FA to send you
+  back where you came from) is validated with `_is_safe_redirect_target()`
+  before being used. A naive `startswith("/")` check would still let
+  `//evil.com` through, since browsers treat that as a protocol-relative
+  external URL — it's parsed and rejected unless it has no scheme/host.
+- Session management: the Flask session is cleared right before a user
+  becomes fully authenticated (normal login and after 2FA), so no stale
+  data (like an abandoned 2FA-setup secret) carries into the new session.
+  `session.permanent` follows the "remember me" checkbox, and logout clears
+  the session outright.
+- Form handling: CSRF token failures (expired/duplicate form submissions)
+  are caught by a dedicated error handler that redirects back with a
+  friendly message instead of showing a raw 400 error page. Forms also
+  flash a single top-level notice when server-side validation fails, in
+  addition to the existing per-field error messages.
 
 ## Tests
 

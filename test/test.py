@@ -81,3 +81,71 @@ def test_404_page(client):
 def test_hotels_listing_loads(client):
     response = client.get("/hotels")
     assert response.status_code == 200
+
+
+# ---------------------------------------------------------------------------
+# Redirect safety (open-redirect protection)
+# ---------------------------------------------------------------------------
+
+from app.auth.routes import _is_safe_redirect_target  # noqa: E402
+
+
+def test_safe_redirect_allows_relative_path():
+    assert _is_safe_redirect_target("/dashboard") is True
+
+
+def test_safe_redirect_rejects_protocol_relative():
+    # "//evil.com" starts with "/" but browsers treat it as an external URL
+    assert _is_safe_redirect_target("//evil.com") is False
+
+
+def test_safe_redirect_rejects_absolute_url():
+    assert _is_safe_redirect_target("https://evil.com/phish") is False
+
+
+def test_safe_redirect_rejects_empty():
+    assert _is_safe_redirect_target("") is False
+    assert _is_safe_redirect_target(None) is False
+
+
+# ---------------------------------------------------------------------------
+# CSRF handling
+# ---------------------------------------------------------------------------
+
+def test_csrf_failure_redirects_instead_of_crashing():
+    class CsrfEnabledConfig(Config):
+        TESTING = True
+        WTF_CSRF_ENABLED = True
+        SECRET_KEY = "test-secret"
+
+    app = create_app(CsrfEnabledConfig)
+    with app.test_client() as csrf_client:
+        # POST with no csrf_token field at all -> CSRFError -> our handler
+        # should redirect gracefully rather than returning a raw 400 crash.
+        response = csrf_client.post("/auth/login", data={"email": "a@b.com", "password": "x"})
+        assert response.status_code in (302, 303)
+
+
+# ---------------------------------------------------------------------------
+# Password hashing
+# ---------------------------------------------------------------------------
+
+def test_password_hash_uses_configured_method():
+    from app.models import hash_password
+
+    app = create_app(TestConfig)
+    with app.app_context():
+        hashed = hash_password("Str0ngPass!")
+        assert hashed.startswith("scrypt:")
+
+
+def test_password_hash_respects_custom_method_config():
+    class Pbkdf2Config(TestConfig):
+        PASSWORD_HASH_METHOD = "pbkdf2:sha256"
+
+    from app.models import hash_password
+
+    app = create_app(Pbkdf2Config)
+    with app.app_context():
+        hashed = hash_password("Str0ngPass!")
+        assert hashed.startswith("pbkdf2:sha256")
