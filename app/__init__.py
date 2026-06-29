@@ -1,9 +1,10 @@
 """StayNova application factory."""
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
+from flask_wtf.csrf import CSRFError
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -91,5 +92,13 @@ def create_app(config_object=None):
     @app.errorhandler(429)
     def rate_limited(e):
         return render_template("errors/429.html"), 429
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        # Most often caused by a form sitting open long enough for its CSRF
+        # token to expire, or a duplicate/replayed submission.
+        flash("Your form session expired or was already submitted. Please try again.", "error")
+        target = request.referrer if request.referrer else url_for("main.index")
+        return redirect(target)
 
     return app
