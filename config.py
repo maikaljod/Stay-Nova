@@ -70,6 +70,13 @@ class Config:
     PASSWORD_RESET_MAX_AGE = int(os.environ.get("PASSWORD_RESET_MAX_AGE", 60 * 60))  # 1h
     TOTP_ISSUER_NAME = os.environ.get("TOTP_ISSUER_NAME", "StayNova")
 
+    # --- Password hashing --------------------------------------------------
+    # "scrypt" (Werkzeug's current default) is memory-hard and a strong
+    # choice; "pbkdf2:sha256" is a widely-compatible alternative. Made
+    # explicit/configurable rather than left implicit, so it's a documented,
+    # deliberate choice instead of "whatever this Werkzeug version defaults to".
+    PASSWORD_HASH_METHOD = os.environ.get("PASSWORD_HASH_METHOD", "scrypt")
+
 
 class DevelopmentConfig(Config):
     ENV = "development"

@@ -6,6 +6,7 @@ interpolated directly into a SQL string.
 import hashlib
 from datetime import datetime, timedelta
 
+from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -13,6 +14,18 @@ from app.db import query, execute
 
 MAX_FAILED_LOGINS = 5
 LOCKOUT_MINUTES = 15
+
+
+def hash_password(plain_password):
+    """Hash a plain-text password using the app-configured method.
+
+    Centralizing this (instead of calling generate_password_hash directly
+    at each call site) means the hashing method is a single, explicit,
+    documented config value (PASSWORD_HASH_METHOD) rather than an implicit
+    Werkzeug default that could silently change between versions.
+    """
+    method = current_app.config.get("PASSWORD_HASH_METHOD", "scrypt")
+    return generate_password_hash(plain_password, method=method)
 
 
 def hash_token(raw_token):
@@ -89,7 +102,7 @@ def get_user_by_email(email):
 
 
 def create_user(first_name, last_name, email, phone, password):
-    password_hash = generate_password_hash(password)
+    password_hash = hash_password(password)
     return execute(
         """INSERT INTO users (first_name, last_name, email, phone, password_hash, role)
            VALUES (%s, %s, %s, %s, %s, 'user')""",
@@ -119,7 +132,7 @@ def record_login_failure(user):
 def update_password(user_id, new_password):
     execute(
         "UPDATE users SET password_hash = %s WHERE id = %s",
-        (generate_password_hash(new_password), user_id),
+        (hash_password(new_password), user_id),
     )
 
 
@@ -169,7 +182,7 @@ def reset_password(user_id, new_password):
     execute(
         "UPDATE users SET password_hash = %s, reset_token_hash = NULL, "
         "reset_token_expires = NULL, failed_logins = 0, locked_until = NULL WHERE id = %s",
-        (generate_password_hash(new_password), user_id),
+        (hash_password(new_password), user_id),
     )
 
 

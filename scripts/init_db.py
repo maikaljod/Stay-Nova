@@ -29,6 +29,7 @@ MYSQL_DB = os.environ.get("MYSQL_DB", "staynova")
 
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@staynova.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "Admin@12345")
+PASSWORD_HASH_METHOD = os.environ.get("PASSWORD_HASH_METHOD", "scrypt")
 
 SCHEMA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "sql", "schema.sql")
 
@@ -61,10 +62,10 @@ def seed_data(conn):
              "Beachfront resort with private access to South Beach.",
              "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=1200&q=80",
              "Free WiFi, Beach Access, Pool, Bar, Parking"),
-            ("Alpine Lodge", "Denver", "Mountain View Road", 4,
-             "Cozy mountain lodge minutes from world-class ski slopes.",
-             "https://images.unsplash.com/photo-1548704806-074ca7d67f78?auto=format&fit=crop&w=1200&q=80",
-             "Free WiFi, Fireplace, Ski Storage, Restaurant"),
+            ("Lakeside Haven Resort", "Lake Tahoe", "Shoreline Drive", 4,
+             "A tranquil lakefront resort with private beach access, kayak rentals, and panoramic mountain views.",
+             "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+             "Free WiFi, Private Beach, Kayak Rentals, Restaurant, Parking"),
             ("Urban Nest Boutique Hotel", "Chicago", "Michigan Avenue", 3,
              "Modern boutique hotel steps from the Magnificent Mile.",
              "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80",
@@ -99,7 +100,7 @@ def seed_data(conn):
             cur.execute(
                 """INSERT INTO users (first_name, last_name, email, password_hash, role, is_active, email_verified)
                    VALUES (%s, %s, %s, %s, %s, 1, 1)""",
-                ("Site", "Admin", ADMIN_EMAIL, generate_password_hash(ADMIN_PASSWORD), "admin"),
+                ("Site", "Admin", ADMIN_EMAIL, generate_password_hash(ADMIN_PASSWORD, method=PASSWORD_HASH_METHOD), "admin"),
             )
             print(f"Admin account created -> email: {ADMIN_EMAIL}  password: {ADMIN_PASSWORD}")
             print("IMPORTANT: change this password after first login.")
