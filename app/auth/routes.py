@@ -1,6 +1,7 @@
 """Authentication blueprint: register, login, logout, password change,
 email verification, password reset, and two-factor authentication."""
 from datetime import datetime, timedelta
+from urllib.parse import urlparse
 
 from flask import Blueprint, current_app, render_template, redirect, url_for, flash, request, session
 from flask_login import login_user, logout_user, login_required, current_user
@@ -30,6 +31,32 @@ auth_bp = Blueprint("auth", __name__)
 def _absolute_url(endpoint, **values):
     base = current_app.config["APP_BASE_URL"].rstrip("/")
     return base + url_for(endpoint, **values)
+
+
+def _is_safe_redirect_target(next_page):
+    """Only allow same-site, path-relative redirect targets.
+
+    A plain ``next_page.startswith("/")`` check looks safe but isn't: a
+    value like ``//evil.com`` also starts with "/" yet browsers treat it as
+    a protocol-relative URL and redirect to the external host. Parsing the
+    URL and rejecting anything with a scheme or netloc closes that gap.
+    """
+    if not next_page:
+        return False
+    parsed = urlparse(next_page)
+    return not parsed.scheme and not parsed.netloc and next_page.startswith("/")
+
+
+def _flash_form_errors(form):
+    """Surface a top-level notice when a POSTed form fails validation.
+
+    Field-level messages already show under each input; this adds a single
+    heads-up flash so the failure isn't easy to miss, without duplicating
+    the field errors themselves. A no-op on plain GET requests, since
+    form.errors is only populated after a submitted form fails validation.
+    """
+    if request.method == "POST" and form.errors:
+        flash("Please correct the errors below and try again.", "error")
 
 
 def _send_verification_email(user):
@@ -75,6 +102,7 @@ def register():
         )
         return redirect(url_for("auth.login"))
 
+    _flash_form_errors(form)
     return render_template("auth/register.html", form=form)
 
 
@@ -113,6 +141,7 @@ def resend_verification():
             "info",
         )
         return redirect(url_for("auth.login"))
+    _flash_form_errors(form)
     return render_template("auth/resend_verification.html", form=form)
 
 
@@ -140,6 +169,7 @@ def forgot_password():
         # Same message whether or not the account exists, to avoid email enumeration.
         flash("If an account exists for that email, we've sent password reset instructions.", "info")
         return redirect(url_for("auth.login"))
+    _flash_form_errors(form)
     return render_template("auth/forgot_password.html", form=form)
 
 
@@ -160,6 +190,7 @@ def reset_password_request(token):
         flash("Your password has been reset. You can now log in.", "success")
         return redirect(url_for("auth.login"))
 
+    _flash_form_errors(form)
     return render_template("auth/reset_password.html", form=form, token=token)
 
 
@@ -194,11 +225,16 @@ def login():
                 next_page = request.args.get("next")
                 return redirect(url_for("auth.two_factor_verify", next=next_page))
 
+            remember = (form.remember_me.data == "1")
+            # Drop any leftover session data (e.g. an abandoned 2FA-setup
+            # secret) before establishing the new authenticated session.
+            session.clear()
+            session.permanent = remember
             record_login_success(user.id)
-            login_user(user, remember=(form.remember_me.data == "1"))
+            login_user(user, remember=remember)
             flash(f"Welcome back, {user.first_name}!", "success")
             next_page = request.args.get("next")
-            if next_page and next_page.startswith("/"):
+            if _is_safe_redirect_target(next_page):
                 return redirect(next_page)
             return redirect(url_for("admin.dashboard" if user.is_admin else "main.index"))
 
@@ -207,6 +243,8 @@ def login():
 
         # Same generic message whether the email exists or not
         flash("Invalid email or password.", "error")
+    else:
+        _flash_form_errors(form)
 
     return render_template("auth/login.html", form=form)
 
@@ -215,6 +253,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session.clear()  # drop any stray pending-2FA / setup keys along with the login session
     flash("You have been logged out.", "info")
     return redirect(url_for("main.index"))
 
@@ -230,6 +269,8 @@ def change_password():
             update_password(current_user.id, form.new_password.data)
             flash("Password updated successfully.", "success")
             return redirect(url_for("booking.dashboard"))
+    else:
+        _flash_form_errors(form)
     return render_template("auth/change_password.html", form=form)
 
 
@@ -249,16 +290,21 @@ def two_factor_verify():
     form = TwoFactorVerifyForm()
     if form.validate_on_submit():
         if verify_code(user.totp_secret, form.code.data):
-            remember = session.pop(PENDING_2FA_REMEMBER_KEY, False)
-            session.pop(PENDING_2FA_SESSION_KEY, None)
+            remember = session.get(PENDING_2FA_REMEMBER_KEY, False)
+            next_page = request.args.get("next") or request.form.get("next")
+            # Drop the pending-2FA session state (and anything else stale)
+            # before establishing the new authenticated session.
+            session.clear()
+            session.permanent = remember
             record_login_success(user.id)
             login_user(user, remember=remember)
             flash(f"Welcome back, {user.first_name}!", "success")
-            next_page = request.args.get("next") or request.form.get("next")
-            if next_page and next_page.startswith("/"):
+            if _is_safe_redirect_target(next_page):
                 return redirect(next_page)
             return redirect(url_for("admin.dashboard" if user.is_admin else "main.index"))
         flash("Invalid authentication code. Please try again.", "error")
+    else:
+        _flash_form_errors(form)
 
     return render_template("auth/two_factor_verify.html", form=form, next=request.args.get("next", ""))
 
@@ -283,6 +329,8 @@ def two_factor_setup():
                 disable_totp(current_user.id)
                 flash("Two-factor authentication has been disabled.", "info")
                 return redirect(url_for("auth.two_factor_setup"))
+        else:
+            _flash_form_errors(disable_form)
         return render_template("auth/two_factor_setup.html", enabled=True, disable_form=disable_form)
 
     secret = session.get(PENDING_2FA_SECRET_SESSION_KEY)
@@ -299,6 +347,8 @@ def two_factor_setup():
             flash("Two-factor authentication is now enabled on your account.", "success")
             return redirect(url_for("auth.two_factor_setup"))
         flash("That code didn't match. Please try again.", "error")
+    else:
+        _flash_form_errors(setup_form)
 
     qr_data_uri = build_qr_data_uri(secret, current_user.email, current_app.config["TOTP_ISSUER_NAME"])
     return render_template(
