@@ -62,6 +62,17 @@ class BookingForm(FlaskForm):
             raise ValidationError("Check-out date must be after check-in date.")
 
 
+class ReviewForm(FlaskForm):
+    rating = SelectField(
+        "Rating",
+        choices=[("5", "5 — Excellent"), ("4", "4 — Very good"), ("3", "3 — Average"),
+                 ("2", "2 — Poor"), ("1", "1 — Terrible")],
+        validators=[DataRequired()],
+    )
+    comment = TextAreaField("Your review", validators=[Optional(), Length(max=1000)])
+    submit = SubmitField("Submit review")
+
+
 class HotelForm(FlaskForm):
     name = StringField("Hotel name", validators=[DataRequired(), Length(max=150)])
     city = StringField("City", validators=[DataRequired(), Length(max=100)])
