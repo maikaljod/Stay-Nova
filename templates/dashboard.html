@@ -9,14 +9,15 @@
       <a class="btn btn-outline btn-sm" href="{{ url_for('auth.two_factor_setup') }}">Two-factor authentication</a>
     </div>
   </div>
-  {% if bookings %}
+
+  {% macro bookings_table(rows, show_cancel) %}
   <div class="table-responsive">
   <table>
     <thead>
       <tr><th>Hotel</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Guests</th><th>Total</th><th>Status</th><th></th></tr>
     </thead>
     <tbody>
-      {% for b in bookings %}
+      {% for b in rows %}
       <tr>
         <td>{{ b.hotel_name }} ({{ b.city }})</td>
         <td>{{ b.room_type }}</td>
@@ -25,19 +26,36 @@
         <td>{{ b.guests }}</td>
         <td>${{ '%.2f'|format(b.total_price) }}</td>
         <td><span class="status-badge status-{{ b.status }}">{{ b.status }}</span></td>
-        <td>
-          {% if b.status == 'confirmed' and b.check_in >= today %}
+        <td class="flex-between" style="gap:6px;flex-wrap:nowrap;">
+          {% if show_cancel and b.status == 'confirmed' and b.check_in >= today %}
           <form method="post" action="{{ url_for('booking.cancel', booking_id=b.id) }}" data-confirm="Cancel this booking?">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
           </form>
           {% endif %}
+          <a class="btn btn-outline btn-sm" href="{{ url_for('booking.download_confirmation', booking_id=b.id) }}">Download</a>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
   </div>
+  {% endmacro %}
+
+  {% if bookings %}
+    <h2 class="section-title mt-lg" style="font-size:1.3rem;">Current bookings</h2>
+    {% if current_bookings %}
+      {{ bookings_table(current_bookings, true) }}
+    {% else %}
+      <div class="empty-state">No upcoming stays right now. <a href="{{ url_for('main.hotels') }}">Browse hotels</a></div>
+    {% endif %}
+
+    <h2 class="section-title mt-lg" style="font-size:1.3rem;">Past bookings</h2>
+    {% if past_bookings %}
+      {{ bookings_table(past_bookings, false) }}
+    {% else %}
+      <div class="empty-state">You have no past bookings yet.</div>
+    {% endif %}
   {% else %}
   <div class="empty-state">You have no bookings yet. <a href="{{ url_for('main.hotels') }}">Browse hotels</a></div>
   {% endif %}

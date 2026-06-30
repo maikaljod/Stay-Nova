@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StayNova booking confirmation #{{ booking.id }}</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1f2937; max-width: 560px; margin: 40px auto; padding: 0 20px; }
+  h1 { font-size: 1.4rem; margin-bottom: 4px; }
+  .muted { color: #6b7280; margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 0.95rem; }
+  th { width: 40%; color: #6b7280; font-weight: 600; }
+  .brand { font-weight: 800; font-size: 1.2rem; color: #1a56db; margin-bottom: 24px; }
+  .status { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-transform: capitalize; background: #e0e7ff; color: #1a56db; }
+</style>
+</head>
+<body>
+  <div class="brand">StayNova</div>
+  <h1>Booking confirmation</h1>
+  <p class="muted">Confirmation #{{ booking.id }}</p>
+  <table>
+    <tr><th>Hotel</th><td>{{ booking.hotel_name }}</td></tr>
+    <tr><th>Room</th><td>{{ booking.room_type }}</td></tr>
+    <tr><th>Check-in</th><td>{{ booking.check_in }}</td></tr>
+    <tr><th>Check-out</th><td>{{ booking.check_out }}</td></tr>
+    <tr><th>Guests</th><td>{{ booking.guests }}</td></tr>
+    <tr><th>Total</th><td>${{ '%.2f'|format(booking.total_price) }}</td></tr>
+    <tr><th>Status</th><td><span class="status">{{ booking.status }}</span></td></tr>
+  </table>
+  <p class="muted" style="margin-top:32px;font-size:0.85rem;">This is a StayNova booking confirmation. Keep it for your records.</p>
+</body>
+</html>

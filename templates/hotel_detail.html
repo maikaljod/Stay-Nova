@@ -9,6 +9,12 @@
   <h1 class="section-title">{{ hotel.name }}</h1>
   <div class="hotel-meta">&#128205; {{ hotel.address }}, {{ hotel.city }}</div>
   <div class="stars">{{ ('&#9733;' * hotel.star_rating) | safe }}</div>
+  {% if rating_summary.review_count > 0 %}
+    <div class="hotel-meta mt-lg" style="margin-top:6px;">
+      &#11088; {{ '%.1f'|format(rating_summary.average_rating) }} average
+      &middot; {{ rating_summary.review_count }} review{{ 's' if rating_summary.review_count != 1 else '' }}
+    </div>
+  {% endif %}
 
   {% if hotel.amenities %}
   <div class="mt-lg">
@@ -38,6 +44,47 @@
     {% endfor %}
   {% else %}
     <div class="empty-state">No rooms configured for this hotel yet.</div>
+  {% endif %}
+
+  <h2 class="section-title mt-lg">Reviews &amp; ratings</h2>
+
+  {% if can_review %}
+    <div class="card mt-lg">
+      <h3>{{ 'Update your review' if user_review else 'Leave a review' }}</h3>
+      <form method="post" action="{{ url_for('main.submit_review', hotel_id=hotel.id) }}" novalidate>
+        {{ review_form.hidden_tag() }}
+        <div class="form-group">
+          {{ review_form.rating.label }}
+          {{ review_form.rating() }}
+          {% for error in review_form.rating.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+          {{ review_form.comment.label }}
+          {{ review_form.comment(rows=3, placeholder="How was your stay?") }}
+          {% for error in review_form.comment.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        {{ review_form.submit(class="btn btn-primary") }}
+      </form>
+    </div>
+  {% elif current_user.is_authenticated %}
+    <p class="section-subtitle">You can leave a review once you've completed a stay at this hotel.</p>
+  {% endif %}
+
+  {% if reviews %}
+    <div class="mt-lg">
+      {% for review in reviews %}
+      <div class="card mt-lg">
+        <div class="flex-between">
+          <strong>{{ review.first_name }} {{ review.last_name[0] }}.</strong>
+          <span class="stars">{{ ('&#9733;' * review.rating) | safe }}</span>
+        </div>
+        {% if review.comment %}<p style="margin:8px 0 4px;">{{ review.comment }}</p>{% endif %}
+        <div class="hotel-meta">{{ review.created_at.strftime('%B %Y') if review.created_at else '' }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state mt-lg">No reviews yet. Be the first to share your experience.</div>
   {% endif %}
 </section>
 {% endblock %}

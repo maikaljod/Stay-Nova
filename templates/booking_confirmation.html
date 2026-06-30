@@ -14,7 +14,10 @@
       <tr><th>Guests</th><td>{{ booking.guests }}</td></tr>
       <tr><th>Total</th><td>${{ '%.2f'|format(booking.total_price) }}</td></tr>
     </table>
-    <a class="btn btn-primary mt-lg" href="{{ url_for('booking.dashboard') }}">View my bookings</a>
+    <div class="mt-lg" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn btn-primary" href="{{ url_for('booking.dashboard') }}">View my bookings</a>
+      <a class="btn btn-outline" href="{{ url_for('booking.download_confirmation', booking_id=booking.id) }}">Download confirmation</a>
+    </div>
   </div>
 </section>
 {% endblock %}
