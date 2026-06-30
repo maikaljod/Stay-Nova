@@ -17,7 +17,11 @@ StayNova is a secure hotel booking web application built with Flask, MySQL
 - Secure session cookies (HttpOnly, SameSite) and security response headers
 - Hotel search/browse, hotel detail pages, room booking with availability
   checks and date validation
-- User dashboard with booking history and cancellation
+- Reviews & ratings: guests who completed a stay can rate (1-5) and review
+  a hotel; hotel pages show the average rating and every review
+- Booking history split into current (upcoming/active) and past bookings,
+  with cancellation for upcoming stays and a downloadable confirmation
+  for any booking
 - Admin panel to manage hotels, rooms, and view all bookings
 - Modern, responsive UI (no external CSS framework, single stylesheet)
 
@@ -40,7 +44,7 @@ app/                Flask application package
 instance/            local-only overrides (not committed); outbox/ holds
                      dev-mode emails when MAIL_SERVER isn't configured
 scripts/init_db.py   creates the database/tables and seeds sample data
-sql/schema.sql       MySQL schema (users, hotels, rooms, bookings)
+sql/schema.sql       MySQL schema (users, hotels, rooms, bookings, reviews)
 sql/migrations/      incremental ALTER TABLE scripts for existing databases
 static/              css/js assets
 templates/           Jinja2 templates
@@ -85,6 +89,10 @@ run.py               application entry point
    This creates the `staynova` database, all tables, four sample hotels with
    rooms, and an admin account (`admin@staynova.com` / `Admin@12345` by
    default — printed to the console, change it after first login).
+
+   If you already had a StayNova database from before a given feature was
+   added, apply the matching script(s) in `sql/migrations/` once instead
+   (e.g. `mysql -u root -p staynova < sql/migrations/0002_reviews.sql`).
 
 4. **Run the app**
 
@@ -140,6 +148,11 @@ run.py               application entry point
   friendly message instead of showing a raw 400 error page. Forms also
   flash a single top-level notice when server-side validation fails, in
   addition to the existing per-field error messages.
+- Reviews are gated server-side: only a user with a confirmed, already
+  completed stay at a hotel can post one (checked again on submit, not
+  just before showing the form), and it's one review per user per hotel
+  (a resubmission updates the existing review rather than creating a
+  duplicate).
 
 ## Tests
 

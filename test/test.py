@@ -149,3 +149,27 @@ def test_password_hash_respects_custom_method_config():
     with app.app_context():
         hashed = hash_password("Str0ngPass!")
         assert hashed.startswith("pbkdf2:sha256")
+
+
+# ---------------------------------------------------------------------------
+# Reviews & ratings / booking history
+# ---------------------------------------------------------------------------
+
+def test_submit_review_requires_login(client):
+    # login_required should redirect before any DB access happens, so this
+    # is safe to run without a database configured.
+    response = client.post("/hotels/1/review", data={"rating": "5"}, follow_redirects=False)
+    assert response.status_code in (301, 302)
+    assert "/auth/login" in response.headers.get("Location", "")
+
+
+def test_download_confirmation_requires_login(client):
+    response = client.get("/booking/1/confirmation/download", follow_redirects=False)
+    assert response.status_code in (301, 302)
+    assert "/auth/login" in response.headers.get("Location", "")
+
+
+@needs_db
+def test_hotel_detail_page_loads(client):
+    response = client.get("/hotels/1")
+    assert response.status_code in (200, 404)  # 404 if hotel id 1 doesn't exist in this DB
