@@ -376,3 +376,70 @@ def get_admin_stats():
         "bookings": bookings,
         "revenue": revenue_row["total"],
     }
+
+
+# ---------------------------------------------------------------------------
+# Reviews & ratings
+# ---------------------------------------------------------------------------
+
+def get_reviews_for_hotel(hotel_id):
+    return query(
+        """SELECT reviews.*, users.first_name, users.last_name
+           FROM reviews
+           JOIN users ON users.id = reviews.user_id
+           WHERE reviews.hotel_id = %s
+           ORDER BY reviews.created_at DESC""",
+        (hotel_id,),
+    )
+
+
+def get_hotel_rating_summary(hotel_id):
+    row = query(
+        """SELECT COUNT(*) AS review_count, AVG(rating) AS average_rating
+           FROM reviews WHERE hotel_id = %s""",
+        (hotel_id,),
+        fetch="one",
+    )
+    return {
+        "review_count": row["review_count"] or 0,
+        "average_rating": float(row["average_rating"]) if row["average_rating"] is not None else None,
+    }
+
+
+def get_user_review_for_hotel(user_id, hotel_id):
+    return query(
+        "SELECT * FROM reviews WHERE user_id = %s AND hotel_id = %s",
+        (user_id, hotel_id),
+        fetch="one",
+    )
+
+
+def user_can_review_hotel(user_id, hotel_id):
+    """True if the user has a confirmed, already-completed stay at this hotel."""
+    row = query(
+        """SELECT COUNT(*) AS c
+           FROM bookings
+           JOIN rooms ON rooms.id = bookings.room_id
+           WHERE bookings.user_id = %s AND rooms.hotel_id = %s
+             AND bookings.status = 'confirmed' AND bookings.check_out < CURDATE()""",
+        (user_id, hotel_id),
+        fetch="one",
+    )
+    return row["c"] > 0
+
+
+def upsert_review(user_id, hotel_id, rating, comment, booking_id=None):
+    """Create the user's review for this hotel, or update it if one already
+    exists (one review per user per hotel — see the unique key in schema.sql)."""
+    execute(
+        """INSERT INTO reviews (user_id, hotel_id, booking_id, rating, comment)
+           VALUES (%s, %s, %s, %s, %s)
+           ON DUPLICATE KEY UPDATE rating = VALUES(rating), comment = VALUES(comment),
+                                   booking_id = COALESCE(VALUES(booking_id), booking_id)""",
+        (user_id, hotel_id, booking_id, rating, comment),
+    )
+
+
+def delete_review(review_id, user_id):
+    """Delete a review, scoped to its owner so users can't delete others'."""
+    execute("DELETE FROM reviews WHERE id = %s AND user_id = %s", (review_id, user_id))
