@@ -1,9 +1,13 @@
 """Public-facing pages: home, hotel search, hotel detail."""
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
+from flask_login import login_required, current_user
 
-from app.forms import SearchForm
+from app import limiter
+from app.forms import SearchForm, ReviewForm
 from app.models import (
     get_all_hotels, search_hotels, get_hotel_by_id, get_rooms_by_hotel, get_trending_hotels,
+    get_reviews_for_hotel, get_hotel_rating_summary, get_user_review_for_hotel,
+    user_can_review_hotel, upsert_review,
 )
 
 main_bp = Blueprint("main", __name__)
@@ -30,10 +34,54 @@ def hotels():
 def hotel_detail(hotel_id):
     hotel = get_hotel_by_id(hotel_id)
     if not hotel:
-        from flask import abort
         abort(404)
     rooms = get_rooms_by_hotel(hotel_id)
-    return render_template("hotel_detail.html", hotel=hotel, rooms=rooms)
+    reviews = get_reviews_for_hotel(hotel_id)
+    rating_summary = get_hotel_rating_summary(hotel_id)
+
+    review_form = None
+    can_review = False
+    user_review = None
+    if current_user.is_authenticated:
+        user_review = get_user_review_for_hotel(current_user.id, hotel_id)
+        can_review = user_can_review_hotel(current_user.id, hotel_id)
+        if can_review:
+            review_form = ReviewForm(obj=user_review) if user_review else ReviewForm()
+            if user_review:
+                review_form.rating.data = str(user_review["rating"])
+
+    return render_template(
+        "hotel_detail.html",
+        hotel=hotel,
+        rooms=rooms,
+        reviews=reviews,
+        rating_summary=rating_summary,
+        review_form=review_form,
+        can_review=can_review,
+        user_review=user_review,
+    )
+
+
+@main_bp.route("/hotels/<int:hotel_id>/review", methods=["POST"])
+@login_required
+@limiter.limit("20 per hour")
+def submit_review(hotel_id):
+    hotel = get_hotel_by_id(hotel_id)
+    if not hotel:
+        abort(404)
+
+    if not user_can_review_hotel(current_user.id, hotel_id):
+        flash("You can review a hotel after a completed stay there.", "error")
+        return redirect(url_for("main.hotel_detail", hotel_id=hotel_id))
+
+    form = ReviewForm()
+    if form.validate_on_submit():
+        upsert_review(current_user.id, hotel_id, int(form.rating.data), form.comment.data or None)
+        flash("Thanks — your review has been saved.", "success")
+    else:
+        flash("Please correct the errors below and try again.", "error")
+
+    return redirect(url_for("main.hotel_detail", hotel_id=hotel_id))
 
 
 @main_bp.route("/about")

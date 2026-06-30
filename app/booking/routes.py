@@ -2,7 +2,7 @@
 from datetime import date, timedelta
 from decimal import Decimal
 
-from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
+from flask import Blueprint, render_template, redirect, url_for, flash, request, abort, Response
 from flask_login import login_required, current_user
 
 from app.forms import BookingForm
@@ -68,7 +68,34 @@ def confirmation(booking_id):
 def dashboard():
     bookings = get_bookings_by_user(current_user.id)
     today = date.today()
-    return render_template("dashboard.html", bookings=bookings, today=today)
+
+    # Current: still-active confirmed stays (upcoming or in progress).
+    # Past: anything cancelled/completed, or a confirmed stay whose
+    # check-out date has already gone by.
+    current_bookings = [
+        b for b in bookings if b["status"] == "confirmed" and b["check_out"] >= today
+    ]
+    past_bookings = [b for b in bookings if b not in current_bookings]
+
+    return render_template(
+        "dashboard.html",
+        bookings=bookings,
+        current_bookings=current_bookings,
+        past_bookings=past_bookings,
+        today=today,
+    )
+
+
+@booking_bp.route("/booking/<int:booking_id>/confirmation/download")
+@login_required
+def download_confirmation(booking_id):
+    booking = get_booking_by_id(booking_id)
+    if not booking or booking["user_id"] != current_user.id:
+        abort(404)
+    html = render_template("booking_confirmation_download.html", booking=booking)
+    response = Response(html, mimetype="text/html")
+    response.headers["Content-Disposition"] = f'attachment; filename="staynova-confirmation-{booking_id}.html"'
+    return response
 
 
 @booking_bp.route("/booking/<int:booking_id>/cancel", methods=["POST"])
