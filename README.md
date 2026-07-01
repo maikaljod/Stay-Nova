@@ -25,6 +25,22 @@ StayNova is a secure hotel booking web application built with Flask, MySQL
 - Admin panel to manage hotels, rooms, and view all bookings
 - Modern, responsive UI (no external CSS framework, single stylesheet)
 
+## Responsive breakpoints
+
+| Device        | Screen width  |
+| ------------- | ------------: |
+| Mobile        |   up to 430px |
+| Tablet        |    431-1023px |
+| Laptop        |   1024-1439px |
+| Desktop       |   1440-1919px |
+| Large desktop |       1920px+ |
+
+Base styles in `static/css/style.css` are written desktop-first (targeting
+Laptop and up); `@media (max-width: ...)` rules scale the layout down for
+Tablet and Mobile, and `@media (min-width: 1440px)` / `(min-width: 1920px)`
+rules widen the container and grids back up for Desktop and Large desktop.
+See the comment block at the top of `style.css` for the exact scale.
+
 ## Project structure
 
 ```
