@@ -1,5 +1,22 @@
 /* StayNova — modern UI stylesheet */
 
+/* ---------------------------------------------------------------------
+   Responsive breakpoint scale
+   ---------------------------------------------------------------------
+   Mobile         : up to 430px   (e.g. iPhone 14/15/16, 390-430px)
+   Tablet         : 431-1023px    (e.g. iPad, 768-1024px)
+   Laptop         : 1024-1439px   (default/base styles below target this
+                                   tier and everything larger, unless a
+                                   more specific breakpoint overrides it)
+   Desktop        : 1440-1919px   (@media min-width: 1440px)
+   Large desktop  : 1920px+       (@media min-width: 1920px)
+
+   Base styles are written "desktop-first": the unguarded rules below
+   target Laptop/Desktop/Large-desktop, @media (max-width: ...) blocks
+   scale things down for Tablet/Mobile, and @media (min-width: 1440px) /
+   (min-width: 1920px) blocks widen things back up for the largest screens.
+   ------------------------------------------------------------------- */
+
 :root {
   --color-primary: #1a56db;
   --color-primary-dark: #1442a8;
@@ -390,11 +407,11 @@ input:focus, select:focus, textarea:focus {
   display: block;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .hotel-hero-img { max-height: 260px; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   .hotel-hero-img { max-height: 200px; border-radius: var(--radius-sm); }
 }
 
@@ -447,7 +464,7 @@ input:focus, select:focus, textarea:focus {
 .destination-card .destination-info h3 { margin: 0 0 2px; font-size: 1.05rem; }
 .destination-card .destination-info span { font-size: 0.82rem; opacity: 0.9; }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   .destination-card { height: 180px; }
 }
 
@@ -562,12 +579,12 @@ tr:last-child td { border-bottom: none; }
 
 .footer a:hover { color: #fff; }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   .footer-grid { grid-template-columns: 1fr; }
 }
 
@@ -689,13 +706,13 @@ tr:last-child td { border-bottom: none; }
 .table-responsive table { box-shadow: none; min-width: 640px; }
 
 /* ---------- Responsive breakpoints ---------- */
-@media (max-width: 992px) {
+@media (max-width: 1023px) {
   .grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
   .stats-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
   .room-card img { width: 180px; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .nav-links {
     position: absolute;
     top: 100%; left: 0; right: 0;
@@ -719,7 +736,7 @@ tr:last-child td { border-bottom: none; }
   .room-card-body { align-items: center; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   .container { padding: 0 16px; }
   .card { padding: 22px; }
   .auth-wrapper { padding: 0 8px; }
@@ -728,4 +745,17 @@ tr:last-child td { border-bottom: none; }
   .card form .btn:not(.btn-sm) { width: 100%; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .navbar-inner { padding: 12px 16px; }
+}
+
+/* ---------- Desktop (1440px+) ---------- */
+@media (min-width: 1440px) {
+  :root { --max-width: 1320px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+}
+
+/* ---------- Large desktop (1920px+) ---------- */
+@media (min-width: 1920px) {
+  :root { --max-width: 1520px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  body { font-size: 1.0625rem; }
 }
