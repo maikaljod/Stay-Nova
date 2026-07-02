@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayNova — UI preview</title>
+<link rel="icon" type="image/svg+xml" href="img/logo.svg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  (function () {
+    var stored = localStorage.getItem("theme");
+    var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    if (theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  })();
+</script>
+<style>
+  /* Preview-only banner — not part of the real site, safe to delete this
+     block (and the <div class="preview-banner">) once merged into a
+     Flask template. */
+  .preview-banner {
+    background: #111827;
+    color: #fff;
+    text-align: center;
+    font-size: 0.82rem;
+    padding: 8px 16px;
+  }
+  .preview-banner strong { color: #fbbf24; }
+</style>
+</head>
+<body>
+  <div class="preview-banner">
+    <strong>UI preview</strong> — sample data shown below, not connected to the live database.
+  </div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="#">
+        <img src="img/logo.svg" alt="" width="30" height="30" class="brand-logo">
+        StayNova
+      </a>
+      <div class="navbar-right">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <span class="icon-moon">&#127769;</span>
+          <span class="icon-sun">&#9728;</span>
+        </button>
+        <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+        <ul class="nav-links">
+          <li><a href="#">Hotels</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Log in</a></li>
+          <li><a class="nav-cta" href="#">Sign up</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Find your next stay, effortlessly.</h1>
+        <p>Compare hotels across top destinations and book in minutes with StayNova.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="search-card">
+        <form onsubmit="return false;">
+          <div class="form-group">
+            <label for="city">Destination</label>
+            <input type="text" id="city" name="city" placeholder="City, e.g. Miami">
+          </div>
+          <div class="form-group">
+            <label for="check_in">Check-in</label>
+            <input type="date" id="check_in" name="check_in">
+          </div>
+          <div class="form-group">
+            <label for="check_out">Check-out</label>
+            <input type="date" id="check_out" name="check_out">
+          </div>
+          <div class="form-group">
+            <label for="guests">Guests</label>
+            <input type="number" id="guests" name="guests" min="1" max="20" value="2">
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===================== Most liked by guests (new) ===================== -->
+    <section class="section container">
+      <h2 class="section-title">Most liked by guests</h2>
+      <p class="section-subtitle">Highest-rated stays, based on real guest reviews.</p>
+      <div class="grid">
+
+        <a class="liked-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" alt="Marina Bay Suites">
+          <div class="liked-overlay"></div>
+          <span class="liked-badge">&#10084; Loved by 128 guests</span>
+          <div class="destination-price">From $189/night</div>
+          <div class="liked-info">
+            <h3>Marina Bay Suites</h3>
+            <div class="liked-meta">
+              <span>&#128205; Singapore</span>
+              <span class="liked-rating">&#9733; 4.9</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="liked-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" alt="Lakeside Haven Resort">
+          <div class="liked-overlay"></div>
+          <span class="liked-badge">&#10084; Loved by 97 guests</span>
+          <div class="destination-price">From $142/night</div>
+          <div class="liked-info">
+            <h3>Lakeside Haven Resort</h3>
+            <div class="liked-meta">
+              <span>&#128205; Lake Tahoe</span>
+              <span class="liked-rating">&#9733; 4.8</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="liked-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=900&q=80" alt="Coastal Palm Hotel">
+          <div class="liked-overlay"></div>
+          <span class="liked-badge">&#10084; Loved by 84 guests</span>
+          <div class="destination-price">From $165/night</div>
+          <div class="liked-info">
+            <h3>Coastal Palm Hotel</h3>
+            <div class="liked-meta">
+              <span>&#128205; Miami</span>
+              <span class="liked-rating">&#9733; 4.7</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="liked-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80" alt="Downtown Skyline Hotel">
+          <div class="liked-overlay"></div>
+          <span class="liked-badge">&#10084; Loved by 61 guests</span>
+          <div class="destination-price">From $110/night</div>
+          <div class="liked-info">
+            <h3>Downtown Skyline Hotel</h3>
+            <div class="liked-meta">
+              <span>&#128205; Chicago</span>
+              <span class="liked-rating">&#9733; 4.6</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="liked-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" alt="Alpine Ridge Lodge">
+          <div class="liked-overlay"></div>
+          <span class="liked-badge">&#10084; Loved by 53 guests</span>
+          <div class="destination-price">From $98/night</div>
+          <div class="liked-info">
+            <h3>Alpine Ridge Lodge</h3>
+            <div class="liked-meta">
+              <span>&#128205; Denver</span>
+              <span class="liked-rating">&#9733; 4.5</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="liked-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=900&q=80" alt="Harbor View Inn">
+          <div class="liked-overlay"></div>
+          <span class="liked-badge">&#10084; Loved by 39 guests</span>
+          <div class="destination-price">From $121/night</div>
+          <div class="liked-info">
+            <h3>Harbor View Inn</h3>
+            <div class="liked-meta">
+              <span>&#128205; Seattle</span>
+              <span class="liked-rating">&#9733; 4.4</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ===================== Trending destinations (existing, for comparison) ===================== -->
+    <section class="section container" id="trending-preview">
+      <h2 class="section-title">Trending destinations</h2>
+      <p class="section-subtitle">Popular places our guests are booking right now.</p>
+      <div class="grid">
+        <a class="destination-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" alt="Marina Bay Suites">
+          <div class="destination-overlay"></div>
+          <div class="destination-price">From $189/night</div>
+          <div class="destination-info">
+            <h3>Marina Bay Suites</h3>
+            <span>&#128205; Singapore</span>
+          </div>
+        </a>
+        <a class="destination-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" alt="Lakeside Haven Resort">
+          <div class="destination-overlay"></div>
+          <div class="destination-price">From $142/night</div>
+          <div class="destination-info">
+            <h3>Lakeside Haven Resort</h3>
+            <span>&#128205; Lake Tahoe</span>
+          </div>
+        </a>
+        <a class="destination-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=900&q=80" alt="Coastal Palm Hotel">
+          <div class="destination-overlay"></div>
+          <div class="destination-price">From $165/night</div>
+          <div class="destination-info">
+            <h3>Coastal Palm Hotel</h3>
+            <span>&#128205; Miami</span>
+          </div>
+        </a>
+        <a class="destination-card scroll-reveal" href="#">
+          <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80" alt="Downtown Skyline Hotel">
+          <div class="destination-overlay"></div>
+          <div class="destination-price">From $110/night</div>
+          <div class="destination-info">
+            <h3>Downtown Skyline Hotel</h3>
+            <span>&#128205; Chicago</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===================== Featured hotels (existing, flip cards) ===================== -->
+    <section class="section container">
+      <h2 class="section-title">Featured hotels</h2>
+      <p class="section-subtitle">Hand-picked stays our guests love.</p>
+      <div class="grid">
+
+        <a class="flip-card scroll-reveal" href="#">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" alt="Marina Bay Suites">
+              <div class="hotel-card-body">
+                <h3>Marina Bay Suites</h3>
+                <div class="hotel-meta">&#128205; Singapore</div>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              </div>
+            </div>
+            <div class="flip-card-back">
+              <h3>Marina Bay Suites</h3>
+              <p>Skyline views, infinity pool, and a five-minute walk to the waterfront promenade.</p>
+              <span class="btn btn-primary btn-sm">View details</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="flip-card scroll-reveal" href="#">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" alt="Lakeside Haven Resort">
+              <div class="hotel-card-body">
+                <h3>Lakeside Haven Resort</h3>
+                <div class="hotel-meta">&#128205; Lake Tahoe</div>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;</div>
+              </div>
+            </div>
+            <div class="flip-card-back">
+              <h3>Lakeside Haven Resort</h3>
+              <p>A tranquil lakefront resort with private beach access and kayak rentals.</p>
+              <span class="btn btn-primary btn-sm">View details</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="flip-card scroll-reveal" href="#">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=900&q=80" alt="Coastal Palm Hotel">
+              <div class="hotel-card-body">
+                <h3>Coastal Palm Hotel</h3>
+                <div class="hotel-meta">&#128205; Miami</div>
+                <div class="stars">&#9733;&#9733;&#9733;&#9733;</div>
+              </div>
+            </div>
+            <div class="flip-card-back">
+              <h3>Coastal Palm Hotel</h3>
+              <p>Beachfront rooms, rooftop bar, and easy access to South Beach nightlife.</p>
+              <span class="btn btn-primary btn-sm">View details</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col footer-brand">
+        <div class="footer-logo">
+          <img src="img/logo.svg" alt="" width="26" height="26">
+          <span>StayNova</span>
+        </div>
+        <p>Find and book your perfect stay, anywhere.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="StayNova on X (Twitter)" title="X (Twitter)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7.1l-5.6-6.9L4.2 22H1l8.1-9.3L0.9 2H8.2l5 6.4L18.9 2Zm-1.2 18h1.9L6.4 4H4.4l13.3 16Z"/></svg>
+          </a>
+          <a href="#" aria-label="StayNova on Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2 .25 2.5.42a5 5 0 0 1 1.8 1.2 5 5 0 0 1 1.2 1.8c.17.5.36 1.3.42 2.5.06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.06 1.2-.25 2-.42 2.5a5.4 5.4 0 0 1-3 3 5 5 0 0 1-2.5.42c-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07a5 5 0 0 1-2.5-.42 5.4 5.4 0 0 1-3-3 5 5 0 0 1-.42-2.5C2.21 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.06-1.2.25-2 .42-2.5a5 5 0 0 1 1.2-1.8 5 5 0 0 1 1.8-1.2c.5-.17 1.3-.36 2.5-.42C8.4 2.21 8.8 2.2 12 2.2Zm0 1.8c-3.15 0-3.52 0-4.76.07-.97.04-1.5.2-1.85.34-.47.18-.8.4-1.15.75-.35.35-.57.68-.75 1.15-.13.35-.3.88-.34 1.85C3.08 8.48 3.07 8.85 3.07 12s0 3.52.06 4.76c.05.97.21 1.5.35 1.85.18.47.4.8.75 1.15.35.35.68.57 1.15.75.35.13.88.3 1.85.34 1.24.06 1.61.07 4.76.07s3.52 0 4.76-.07c.97-.04 1.5-.21 1.85-.34.47-.18.8-.4 1.15-.75.35-.35.57-.68.75-1.15.13-.35.3-.88.34-1.85.06-1.24.07-1.61.07-4.76s0-3.52-.07-4.76c-.04-.97-.21-1.5-.34-1.85a3.2 3.2 0 0 0-.75-1.15 3.2 3.2 0 0 0-1.15-.75c-.35-.13-.88-.3-1.85-.34C15.52 4 15.15 3.99 12 3.99Zm0 3.55a4.46 4.46 0 1 1 0 8.92 4.46 4.46 0 0 1 0-8.92Zm0 1.8a2.66 2.66 0 1 0 0 5.32 2.66 2.66 0 0 0 0-5.32Zm4.64-2a1.04 1.04 0 1 1 0 2.08 1.04 1.04 0 0 1 0-2.08Z"/></svg>
+          </a>
+          <a href="#" aria-label="StayNova on Facebook" title="Facebook">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8.4h2.8l.4-3.3h-3.2V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.56A23 23 0 0 0 14.3 3.4c-2.5 0-4.2 1.53-4.2 4.34v2.56H7.3v3.3h2.8V22h3.4Z"/></svg>
+          </a>
+          <a href="#" aria-label="StayNova on LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.15 1.45-2.15 2.95V21h-4V9Z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#">Browse hotels</a></li>
+          <li><a href="#trending-preview">Trending destinations</a></li>
+          <li><a href="#">Create an account</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help center</a></li>
+          <li><a href="#">Safety tips</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Cancellations</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy notice</a></li>
+          <li><a href="#">Terms of service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span class="footer-copyright">&copy; 2026 StayNova. All rights reserved.</span>
+      <div class="footer-bottom-right">
+        <button type="button" class="lang-selector" aria-label="Select language">
+          <span aria-hidden="true">&#127760;</span> English (US)
+        </button>
+        <ul class="footer-bottom-links">
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
