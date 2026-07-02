@@ -229,6 +229,37 @@ def get_trending_hotels(limit=4):
     )
 
 
+def get_most_liked_hotels(limit=6, min_reviews=1):
+    """Hotels guests rate highest, for the homepage "Most liked by guests"
+    section. Ranked by review volume first, then average rating, so a hotel
+    with a handful of glowing reviews doesn't outrank one loved by many.
+    Only hotels with at least `min_reviews` review(s) are eligible.
+
+    Review aggregates are computed in a subquery before joining to hotels/
+    rooms, so a hotel with multiple rooms doesn't inflate its review count
+    or skew its average via the join fan-out."""
+    return query(
+        """SELECT hotels.id, hotels.name, hotels.city, hotels.image_url, hotels.star_rating,
+                  review_stats.review_count, review_stats.average_rating,
+                  room_prices.from_price
+           FROM hotels
+           JOIN (
+               SELECT hotel_id, COUNT(*) AS review_count, AVG(rating) AS average_rating
+               FROM reviews
+               GROUP BY hotel_id
+               HAVING COUNT(*) >= %s
+           ) AS review_stats ON review_stats.hotel_id = hotels.id
+           LEFT JOIN (
+               SELECT hotel_id, MIN(price_per_night) AS from_price
+               FROM rooms
+               GROUP BY hotel_id
+           ) AS room_prices ON room_prices.hotel_id = hotels.id
+           ORDER BY review_stats.review_count DESC, review_stats.average_rating DESC
+           LIMIT %s""",
+        (min_reviews, limit),
+    )
+
+
 def search_hotels(city=None, guests=None):
     sql = "SELECT * FROM hotels WHERE 1=1"
     params = []

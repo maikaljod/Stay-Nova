@@ -6,8 +6,8 @@ from app import limiter
 from app.forms import SearchForm, ReviewForm
 from app.models import (
     get_all_hotels, search_hotels, get_hotel_by_id, get_rooms_by_hotel, get_trending_hotels,
-    get_reviews_for_hotel, get_hotel_rating_summary, get_user_review_for_hotel,
-    user_can_review_hotel, upsert_review,
+    get_most_liked_hotels, get_reviews_for_hotel, get_hotel_rating_summary,
+    get_user_review_for_hotel, user_can_review_hotel, upsert_review,
 )
 
 main_bp = Blueprint("main", __name__)
@@ -18,7 +18,10 @@ def index():
     form = SearchForm()
     hotels = get_all_hotels()[:6]
     trending = get_trending_hotels(limit=4)
-    return render_template("index.html", hotels=hotels, form=form, trending=trending)
+    most_liked = get_most_liked_hotels(limit=6)
+    return render_template(
+        "index.html", hotels=hotels, form=form, trending=trending, most_liked=most_liked
+    )
 
 
 @main_bp.route("/hotels")
