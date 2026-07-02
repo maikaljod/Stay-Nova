@@ -35,7 +35,7 @@
 </div>
 
 {% if trending %}
-<section class="section container">
+<section class="section container" id="trending">
   <h2 class="section-title">Trending destinations</h2>
   <p class="section-subtitle">Popular places our guests are booking right now.</p>
   <div class="grid">
@@ -47,6 +47,30 @@
       <div class="destination-info">
         <h3>{{ hotel.name }}</h3>
         <span>&#128205; {{ hotel.city }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if most_liked %}
+<section class="section container">
+  <h2 class="section-title">Most liked by guests</h2>
+  <p class="section-subtitle">Highest-rated stays, based on real guest reviews.</p>
+  <div class="grid">
+    {% for hotel in most_liked %}
+    <a class="liked-card scroll-reveal" href="{{ url_for('main.hotel_detail', hotel_id=hotel.id) }}">
+      {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}">{% endif %}
+      <div class="liked-overlay"></div>
+      <span class="liked-badge">&#10084; Loved by {{ hotel.review_count }} guest{{ 's' if hotel.review_count != 1 else '' }}</span>
+      {% if hotel.from_price %}<div class="destination-price">From ${{ '%.0f'|format(hotel.from_price) }}/night</div>{% endif %}
+      <div class="liked-info">
+        <h3>{{ hotel.name }}</h3>
+        <div class="liked-meta">
+          <span>&#128205; {{ hotel.city }}</span>
+          <span class="liked-rating">&#9733; {{ '%.1f'|format(hotel.average_rating) }}</span>
+        </div>
       </div>
     </a>
     {% endfor %}
