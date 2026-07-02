@@ -76,6 +76,28 @@
           <span>StayNova</span>
         </div>
         <p>Find and book your perfect stay, anywhere.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="StayNova on X (Twitter)" title="X (Twitter)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-7.6 8.7L23.3 22h-7.1l-5.6-6.9L4.2 22H1l8.1-9.3L0.9 2H8.2l5 6.4L18.9 2Zm-1.2 18h1.9L6.4 4H4.4l13.3 16Z"/></svg>
+          </a>
+          <a href="#" aria-label="StayNova on Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.2.06 2 .25 2.5.42a5 5 0 0 1 1.8 1.2 5 5 0 0 1 1.2 1.8c.17.5.36 1.3.42 2.5.06 1.3.07 1.7.07 4.9s0 3.6-.07 4.9c-.06 1.2-.25 2-.42 2.5a5.4 5.4 0 0 1-3 3 5 5 0 0 1-2.5.42c-1.3.06-1.7.07-4.9.07s-3.6 0-4.9-.07a5 5 0 0 1-2.5-.42 5.4 5.4 0 0 1-3-3 5 5 0 0 1-.42-2.5C2.21 15.6 2.2 15.2 2.2 12s0-3.6.07-4.9c.06-1.2.25-2 .42-2.5a5 5 0 0 1 1.2-1.8 5 5 0 0 1 1.8-1.2c.5-.17 1.3-.36 2.5-.42C8.4 2.21 8.8 2.2 12 2.2Zm0 1.8c-3.15 0-3.52 0-4.76.07-.97.04-1.5.2-1.85.34-.47.18-.8.4-1.15.75-.35.35-.57.68-.75 1.15-.13.35-.3.88-.34 1.85C3.08 8.48 3.07 8.85 3.07 12s0 3.52.06 4.76c.05.97.21 1.5.35 1.85.18.47.4.8.75 1.15.35.35.68.57 1.15.75.35.13.88.3 1.85.34 1.24.06 1.61.07 4.76.07s3.52 0 4.76-.07c.97-.04 1.5-.21 1.85-.34.47-.18.8-.4 1.15-.75.35-.35.57-.68.75-1.15.13-.35.3-.88.34-1.85.06-1.24.07-1.61.07-4.76s0-3.52-.07-4.76c-.04-.97-.21-1.5-.34-1.85a3.2 3.2 0 0 0-.75-1.15 3.2 3.2 0 0 0-1.15-.75c-.35-.13-.88-.3-1.85-.34C15.52 4 15.15 3.99 12 3.99Zm0 3.55a4.46 4.46 0 1 1 0 8.92 4.46 4.46 0 0 1 0-8.92Zm0 1.8a2.66 2.66 0 1 0 0 5.32 2.66 2.66 0 0 0 0-5.32Zm4.64-2a1.04 1.04 0 1 1 0 2.08 1.04 1.04 0 0 1 0-2.08Z"/></svg>
+          </a>
+          <a href="#" aria-label="StayNova on Facebook" title="Facebook">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8.4h2.8l.4-3.3h-3.2V8.1c0-.95.26-1.6 1.63-1.6h1.74V3.56A23 23 0 0 0 14.3 3.4c-2.5 0-4.2 1.53-4.2 4.34v2.56H7.3v3.3h2.8V22h3.4Z"/></svg>
+          </a>
+          <a href="#" aria-label="StayNova on LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.33-.02-3.05-1.86-3.05-1.86 0-2.15 1.45-2.15 2.95V21h-4V9Z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="{{ url_for('main.hotels') }}">Browse hotels</a></li>
+          <li><a href="{{ url_for('main.index') }}#trending">Trending destinations</a></li>
+          <li><a href="{{ url_for('auth.register') }}">Create an account</a></li>
+        </ul>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
@@ -102,7 +124,17 @@
       </div>
     </div>
     <div class="container footer-bottom">
-      <span>&copy; {{ 2026 }} StayNova. All rights reserved.</span>
+      <span class="footer-copyright">&copy; {{ 2026 }} StayNova. All rights reserved.</span>
+      <div class="footer-bottom-right">
+        <button type="button" class="lang-selector" aria-label="Select language">
+          <span aria-hidden="true">&#127760;</span> English (US)
+        </button>
+        <ul class="footer-bottom-links">
+          <li><a href="{{ url_for('main.privacy_notice') }}">Privacy</a></li>
+          <li><a href="{{ url_for('main.terms_of_service') }}">Terms</a></li>
+          <li><a href="{{ url_for('main.accessibility') }}">Accessibility</a></li>
+        </ul>
+      </div>
     </div>
   </footer>
 
