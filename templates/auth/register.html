@@ -42,7 +42,7 @@
           {{ form.confirm_password(placeholder="Repeat your password", autocomplete="new-password", id="confirm_password") }}
           {% for error in form.confirm_password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
         </div>
-        {{ form.submit(class="btn btn-primary btn-block") }}
+        {{ form.submit(class="btn btn-shine btn-block") }}
       </form>
       <div class="auth-footer">
         Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
