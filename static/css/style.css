@@ -225,6 +225,43 @@ img { max-width: 100%; display: block; }
 .btn-block { width: 100%; }
 .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
 
+/* ---------- Shine button (iPhone purple) ---------- */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 50%, #4c1d95 100%);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(109, 40, 217, 0.45);
+}
+
+.btn-shine:hover {
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 50%, #5b21b6 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(109, 40, 217, 0.55);
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.65) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  animation: btnShineSweep 3.2s ease-in-out infinite;
+}
+
+@keyframes btnShineSweep {
+  0% { left: -75%; }
+  55% { left: 130%; }
+  100% { left: 130%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-shine::after { animation: none; }
+}
+
 .form-group { margin-bottom: 18px; }
 
 .form-row { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -741,8 +778,9 @@ tr:last-child td { border-bottom: none; }
   .scroll-reveal { opacity: 1; transform: none; transition: none; }
 }
 
-/* ---------- Glassmorphism (auth pages) ---------- */
-.auth-glass-page {
+/* ---------- Liquid Glass (auth / about / hotels) ---------- */
+.auth-glass-page,
+.glass-page {
   flex: 1;
   display: flex;
   align-items: center;
@@ -759,18 +797,56 @@ tr:last-child td { border-bottom: none; }
   100% { background-position: 0% 50%; }
 }
 
-.auth-glass-page .auth-wrapper {
+.auth-glass-page .auth-wrapper,
+.glass-page .auth-wrapper {
   margin: 0;
   width: 100%;
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+/* Liquid Glass surface: layered blur + a specular highlight along the top
+   edge plus a soft diagonal light-catch, like a curved sheet of glass. */
+.glass-card,
+.liquid-glass {
+  position: relative;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.24), rgba(99, 102, 241, 0.14) 55%, rgba(255, 255, 255, 0.10));
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 28px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
   color: #fff;
+  overflow: hidden;
+}
+
+.glass-card::before,
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.glass-card::after,
+.liquid-glass::after {
+  content: "";
+  position: absolute;
+  top: -55%;
+  left: -20%;
+  width: 65%;
+  height: 165%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.3), transparent 70%);
+  transform: rotate(25deg);
+  pointer-events: none;
+}
+
+.glass-card > *,
+.liquid-glass > * {
+  position: relative;
+  z-index: 1;
 }
 
 .auth-animate-in {
@@ -803,21 +879,30 @@ tr:last-child td { border-bottom: none; }
   .auth-animate-in .form-group { animation: none; }
 }
 
-.glass-card .auth-header h1 { color: #fff; }
-.glass-card .auth-header p { color: rgba(255, 255, 255, 0.85); }
-.glass-card label { color: #fff; }
+.glass-card .auth-header h1,
+.liquid-glass h1,
+.liquid-glass h2 { color: #fff; }
+.glass-card .auth-header p,
+.liquid-glass p { color: rgba(255, 255, 255, 0.85); }
+.glass-card label,
+.liquid-glass label { color: #fff; }
 
 .glass-card input[type="text"],
 .glass-card input[type="email"],
-.glass-card input[type="password"] {
+.glass-card input[type="password"],
+.liquid-glass input[type="text"],
+.liquid-glass input[type="email"],
+.liquid-glass input[type="number"] {
   background: rgba(255, 255, 255, 0.16);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
 }
 
-.glass-card input::placeholder { color: rgba(255, 255, 255, 0.7); }
+.glass-card input::placeholder,
+.liquid-glass input::placeholder { color: rgba(255, 255, 255, 0.7); }
 
-.glass-card input:focus {
+.glass-card input:focus,
+.liquid-glass input:focus {
   background: rgba(255, 255, 255, 0.26);
   border-color: #fff;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
@@ -825,6 +910,10 @@ tr:last-child td { border-bottom: none; }
 
 .glass-card .auth-footer { color: rgba(255, 255, 255, 0.85); }
 .glass-card .auth-footer a { color: #fff; font-weight: 600; text-decoration: underline; }
+
+.liquid-glass.section-title,
+.liquid-glass .section-title { color: #fff; }
+.liquid-glass .section-subtitle { color: rgba(255, 255, 255, 0.85); }
 
 /* ---------- Table responsiveness ---------- */
 .table-responsive {
