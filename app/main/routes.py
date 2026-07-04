@@ -6,7 +6,7 @@ from app import limiter
 from app.forms import SearchForm, ReviewForm
 from app.models import (
     get_all_hotels, search_hotels, get_hotel_by_id, get_rooms_by_hotel, get_trending_hotels,
-    get_most_liked_hotels, get_reviews_for_hotel, get_hotel_rating_summary,
+    get_most_liked_hotels, get_distinct_amenities, get_reviews_for_hotel, get_hotel_rating_summary,
     get_user_review_for_hotel, user_can_review_hotel, upsert_review,
 )
 
@@ -29,8 +29,43 @@ def hotels():
     form = SearchForm(request.args, meta={"csrf": False})
     city = request.args.get("city", "").strip()
     guests = request.args.get("guests", "").strip()
-    results = search_hotels(city=city or None, guests=guests or None)
-    return render_template("hotels.html", hotels=results, form=form, city=city)
+    min_price = request.args.get("min_price", "").strip()
+    max_price = request.args.get("max_price", "").strip()
+    star_rating = request.args.get("star_rating", "").strip()
+    amenities = [a for a in request.args.getlist("amenities") if a.strip()]
+    sort = request.args.get("sort", "").strip()
+
+    results = search_hotels(
+        city=city or None,
+        guests=guests or None,
+        min_price=min_price or None,
+        max_price=max_price or None,
+        min_star=star_rating or None,
+        amenities=amenities or None,
+        sort=sort or None,
+    )
+
+    filters = {
+        "city": city,
+        "guests": guests,
+        "min_price": min_price,
+        "max_price": max_price,
+        "star_rating": star_rating,
+        "amenities": amenities,
+        "sort": sort,
+        "any_active": bool(
+            city or guests or min_price or max_price or star_rating or amenities or sort
+        ),
+    }
+
+    return render_template(
+        "hotels.html",
+        hotels=results,
+        form=form,
+        city=city,
+        filters=filters,
+        amenities_options=get_distinct_amenities(),
+    )
 
 
 @main_bp.route("/hotels/<int:hotel_id>")

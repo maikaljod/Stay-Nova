@@ -260,13 +260,91 @@ def get_most_liked_hotels(limit=6, min_reviews=1):
     )
 
 
-def search_hotels(city=None, guests=None):
-    sql = "SELECT * FROM hotels WHERE 1=1"
+def get_distinct_amenities():
+    """Flatten every hotel's comma-separated amenities string into a sorted,
+    de-duplicated list, for populating the hotels-page filter checkboxes."""
+    rows = query("SELECT DISTINCT amenities FROM hotels WHERE amenities IS NOT NULL AND amenities <> ''")
+    seen = set()
+    for row in rows:
+        for item in (row["amenities"] or "").split(","):
+            name = item.strip()
+            if name:
+                seen.add(name)
+    return sorted(seen)
+
+
+def _safe_float(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _safe_int(value):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+_HOTEL_SORT_OPTIONS = {
+    "price_asc": "(room_prices.from_price IS NULL) ASC, room_prices.from_price ASC",
+    "price_desc": "(room_prices.from_price IS NULL) ASC, room_prices.from_price DESC",
+    "rating_desc": "average_rating DESC, review_count DESC",
+}
+
+
+def search_hotels(city=None, guests=None, min_price=None, max_price=None, min_star=None, amenities=None, sort=None):
+    """Hotel search with optional filters. Price/rating come from LEFT JOIN
+    subqueries (a hotel's cheapest room, and its review average) so hotels
+    with no rooms or no reviews yet still show up rather than being dropped."""
+    sql = """
+        SELECT hotels.*, room_prices.from_price,
+               COALESCE(review_stats.average_rating, 0) AS average_rating,
+               COALESCE(review_stats.review_count, 0) AS review_count
+        FROM hotels
+        LEFT JOIN (
+            SELECT hotel_id, MIN(price_per_night) AS from_price
+            FROM rooms
+            GROUP BY hotel_id
+        ) AS room_prices ON room_prices.hotel_id = hotels.id
+        LEFT JOIN (
+            SELECT hotel_id, COUNT(*) AS review_count, AVG(rating) AS average_rating
+            FROM reviews
+            GROUP BY hotel_id
+        ) AS review_stats ON review_stats.hotel_id = hotels.id
+        WHERE 1=1
+    """
     params = []
+
     if city:
-        sql += " AND city LIKE %s"
+        sql += " AND hotels.city LIKE %s"
         params.append(f"%{city}%")
-    sql += " ORDER BY name"
+
+    min_star_val = _safe_int(min_star)
+    if min_star_val:
+        sql += " AND hotels.star_rating >= %s"
+        params.append(min_star_val)
+
+    min_price_val = _safe_float(min_price)
+    if min_price_val is not None:
+        sql += " AND room_prices.from_price >= %s"
+        params.append(min_price_val)
+
+    max_price_val = _safe_float(max_price)
+    if max_price_val is not None:
+        sql += " AND room_prices.from_price <= %s"
+        params.append(max_price_val)
+
+    for amenity in (amenities or []):
+        amenity = (amenity or "").strip()
+        if amenity:
+            sql += " AND hotels.amenities LIKE %s"
+            params.append(f"%{amenity}%")
+
+    order_by = _HOTEL_SORT_OPTIONS.get(sort, "hotels.name ASC")
+    sql += f" ORDER BY {order_by}"
+
     hotels = query(sql, params)
 
     if guests:
