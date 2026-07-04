@@ -9,46 +9,91 @@
     </div>
   </div>
 
-  <div class="search-card liquid-glass" style="margin-top:0;">
-    <form method="get" action="{{ url_for('main.hotels') }}">
-      <div class="form-group">
-        <label for="city">Destination</label>
-        <input type="text" id="city" name="city" value="{{ request.args.get('city', '') }}" placeholder="City">
-      </div>
-      <div class="form-group">
-        <label for="guests">Guests</label>
-        <input type="number" id="guests" name="guests" min="1" max="20" value="{{ request.args.get('guests', '') }}">
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-shine btn-block">Filter</button>
-      </div>
-    </form>
-  </div>
-
-  {% if hotels %}
-  <div class="grid mt-lg">
-    {% for hotel in hotels %}
-    <a class="flip-card scroll-reveal" href="{{ url_for('main.hotel_detail', hotel_id=hotel.id) }}">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}">{% endif %}
-          <div class="hotel-card-body">
-            <h3>{{ hotel.name }}</h3>
-            <div class="hotel-meta">&#128205; {{ hotel.city }}</div>
-            <div class="stars">{{ ('&#9733;' * hotel.star_rating) | safe }}</div>
+  <div class="hotels-layout">
+    <aside class="filters-panel liquid-glass">
+      <h3>Filters</h3>
+      <form method="get" action="{{ url_for('main.hotels') }}">
+        <div class="form-group">
+          <label for="city">Destination</label>
+          <input type="text" id="city" name="city" value="{{ filters.city }}" placeholder="City">
+        </div>
+        <div class="form-group">
+          <label for="guests">Guests</label>
+          <input type="number" id="guests" name="guests" min="1" max="20" value="{{ filters.guests }}">
+        </div>
+        <div class="form-group">
+          <label>Price per night</label>
+          <div class="form-row">
+            <input type="number" name="min_price" min="0" placeholder="Min" value="{{ filters.min_price }}">
+            <input type="number" name="max_price" min="0" placeholder="Max" value="{{ filters.max_price }}">
           </div>
         </div>
-        <div class="flip-card-back">
-          <h3>{{ hotel.name }}</h3>
-          <p>{{ hotel.description or "Discover this hotel's rooms and amenities." }}</p>
-          <span class="btn btn-primary btn-sm">View details</span>
+        <div class="form-group">
+          <label for="star_rating">Star rating</label>
+          <select id="star_rating" name="star_rating">
+            <option value="" {{ 'selected' if not filters.star_rating }}>Any</option>
+            <option value="5" {{ 'selected' if filters.star_rating == '5' }}>5 stars</option>
+            <option value="4" {{ 'selected' if filters.star_rating == '4' }}>4+ stars</option>
+            <option value="3" {{ 'selected' if filters.star_rating == '3' }}>3+ stars</option>
+          </select>
         </div>
+        {% if amenities_options %}
+        <div class="form-group">
+          <label>Amenities</label>
+          <div class="filter-checkboxes">
+            {% for amenity in amenities_options %}
+            <label class="checkbox-pill">
+              <input type="checkbox" name="amenities" value="{{ amenity }}" {{ 'checked' if amenity in filters.amenities }}>
+              {{ amenity }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        <div class="form-group">
+          <label for="sort">Sort by</label>
+          <select id="sort" name="sort">
+            <option value="" {{ 'selected' if not filters.sort }}>Recommended</option>
+            <option value="price_asc" {{ 'selected' if filters.sort == 'price_asc' }}>Price: Low to High</option>
+            <option value="price_desc" {{ 'selected' if filters.sort == 'price_desc' }}>Price: High to Low</option>
+            <option value="rating_desc" {{ 'selected' if filters.sort == 'rating_desc' }}>Rating: High to Low</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-shine btn-block">Apply filters</button>
+        {% if filters.any_active %}
+        <a href="{{ url_for('main.hotels') }}" class="btn btn-outline btn-block mt-sm">Clear filters</a>
+        {% endif %}
+      </form>
+    </aside>
+
+    <div class="hotels-results">
+      {% if hotels %}
+      <div class="grid">
+        {% for hotel in hotels %}
+        <a class="flip-card scroll-reveal" href="{{ url_for('main.hotel_detail', hotel_id=hotel.id) }}">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              {% if hotel.image_url %}<img src="{{ hotel.image_url }}" alt="{{ hotel.name }}">{% endif %}
+              <div class="hotel-card-body">
+                <h3>{{ hotel.name }}</h3>
+                <div class="hotel-meta">&#128205; {{ hotel.city }}</div>
+                <div class="stars">{{ ('&#9733;' * hotel.star_rating) | safe }}</div>
+                {% if hotel.from_price %}<div class="hotel-meta">From ${{ '%.0f'|format(hotel.from_price) }}/night</div>{% endif %}
+              </div>
+            </div>
+            <div class="flip-card-back">
+              <h3>{{ hotel.name }}</h3>
+              <p>{{ hotel.description or "Discover this hotel's rooms and amenities." }}</p>
+              <span class="btn btn-primary btn-sm">View details</span>
+            </div>
+          </div>
+        </a>
+        {% endfor %}
       </div>
-    </a>
-    {% endfor %}
+      {% else %}
+      <div class="empty-state">No hotels match your filters. Try widening your search.</div>
+      {% endif %}
+    </div>
   </div>
-  {% else %}
-  <div class="empty-state">No hotels match your search. Try a different city.</div>
-  {% endif %}
 </section>
 {% endblock %}

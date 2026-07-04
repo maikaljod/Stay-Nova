@@ -315,6 +315,17 @@ input:focus, select:focus, textarea:focus {
 .auth-header h1 { margin: 0 0 6px; font-size: 1.6rem; }
 .auth-header p { color: var(--color-text-muted); margin: 0; }
 
+.auth-logo {
+  display: block;
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 14px;
+  padding: 10px 16px;
+}
+
 .auth-footer { text-align: center; margin-top: 18px; font-size: 0.9rem; color: var(--color-text-muted); }
 
 /* ---------- Hero ---------- */
@@ -359,6 +370,57 @@ input:focus, select:focus, textarea:focus {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
+}
+
+/* ---------- Hotels page: filters sidebar ---------- */
+.hotels-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.filters-panel {
+  position: sticky;
+  top: 20px;
+  padding: 24px;
+}
+
+.filters-panel h3 { margin: 0 0 16px; font-size: 1.05rem; }
+.filters-panel .form-group { margin-bottom: 16px; }
+.filters-panel .form-row { display: flex; gap: 10px; }
+.filters-panel .form-row .form-group { flex: 1; min-width: 0; }
+
+.filter-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.checkbox-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 5px 12px;
+  cursor: pointer;
+  margin: 0;
+}
+
+[data-theme="dark"] .checkbox-pill { background: rgba(255, 255, 255, 0.06); }
+
+.checkbox-pill input { width: auto; margin: 0; }
+
+.hotels-results .empty-state { grid-column: 1 / -1; }
+
+@media (max-width: 1023px) {
+  .hotels-layout { grid-template-columns: 1fr; }
+  .filters-panel { position: static; }
 }
 
 .hotel-card {
@@ -633,6 +695,124 @@ tr:last-child td { border-bottom: none; }
 .stat-card .value { font-size: 1.8rem; font-weight: 800; color: var(--color-primary); }
 .stat-card .label { color: var(--color-text-muted); font-size: 0.85rem; }
 
+/* ---------- Admin dashboard shell ---------- */
+.admin-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 28px;
+  padding: 32px 0 56px;
+  align-items: start;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: rgba(26, 86, 219, 0.1);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+.admin-nav { display: flex; flex-direction: column; gap: 4px; }
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: background var(--transition), color var(--transition);
+}
+
+.admin-nav a:hover { background: rgba(26, 86, 219, 0.08); }
+
+.admin-nav a.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.admin-sidebar-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-exit-link { font-size: 0.85rem; color: var(--color-text-muted); }
+
+.admin-topbar { margin-bottom: 24px; }
+.admin-topbar h1 { margin: 0 0 4px; font-size: 1.6rem; }
+.admin-topbar p { margin: 0; color: var(--color-text-muted); }
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.admin-stat-card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.admin-stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+.admin-stat-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-stat-icon.icon-blue { background: rgba(26, 86, 219, 0.12); color: #1a56db; }
+.admin-stat-icon.icon-purple { background: rgba(139, 92, 246, 0.14); color: #7c3aed; }
+.admin-stat-icon.icon-teal { background: rgba(8, 145, 178, 0.14); color: #0891b2; }
+.admin-stat-icon.icon-amber { background: rgba(245, 158, 11, 0.16); color: #b45309; }
+.admin-stat-icon.icon-green { background: rgba(5, 150, 105, 0.14); color: #059669; }
+
+.admin-stat-value { font-size: 1.5rem; font-weight: 800; line-height: 1.1; }
+.admin-stat-label { color: var(--color-text-muted); font-size: 0.82rem; margin-top: 2px; }
+
+.admin-panel {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+}
+
+.admin-panel h2 { font-size: 1.15rem; }
+
+@media (max-width: 1023px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .admin-sidebar { position: static; }
+  .admin-nav { flex-direction: row; flex-wrap: wrap; }
+  .admin-nav a { flex: 1; justify-content: center; min-width: 120px; }
+}
+
 /* ---------- Flash messages ---------- */
 .flash-container { max-width: var(--max-width); margin: 16px auto 0; padding: 0 24px; }
 .flash {
@@ -760,6 +940,7 @@ tr:last-child td { border-bottom: none; }
 .empty-state { text-align: center; padding: 60px 20px; color: var(--color-text-muted); }
 .center { text-align: center; }
 .mt-lg { margin-top: 32px; }
+.mt-sm { margin-top: 10px; }
 .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 
 /* ---------- Scroll-reveal ---------- */
@@ -804,20 +985,52 @@ tr:last-child td { border-bottom: none; }
 }
 
 /* Liquid Glass surface: layered blur + a specular highlight along the top
-   edge plus a soft diagonal light-catch, like a curved sheet of glass. */
+   edge plus a soft diagonal light-catch, like a curved sheet of glass.
+   .glass-card is used on the auth pages, which always sit on the vivid
+   animated gradient (.auth-glass-page) — it can safely force white text.
+   .liquid-glass is the standalone, reusable version (Hotels filter panel,
+   admin sidebar, etc.) which may sit directly on a normal light/dark page
+   background, so it stays theme-aware by default. When it's placed inside
+   .glass-page/.auth-glass-page (e.g. the About page) it switches to the
+   same white-text treatment via the context rules below. */
 .glass-card,
 .liquid-glass {
   position: relative;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.24), rgba(99, 102, 241, 0.14) 55%, rgba(255, 255, 255, 0.10));
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 28px;
   box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   color: #fff;
-  overflow: hidden;
+}
+
+.liquid-glass {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.14), rgba(99, 102, 241, 0.08) 55%, rgba(255, 255, 255, 0.55));
+  border-color: rgba(139, 92, 246, 0.25);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .liquid-glass {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.18) 55%, rgba(15, 20, 32, 0.55));
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Context override: a .liquid-glass card sitting on the vivid gradient page
+   (About) reads white, same as .glass-card. */
+.glass-page .liquid-glass,
+.auth-glass-page .liquid-glass {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
 }
 
 .glass-card::before,
@@ -879,30 +1092,21 @@ tr:last-child td { border-bottom: none; }
   .auth-animate-in .form-group { animation: none; }
 }
 
-.glass-card .auth-header h1,
-.liquid-glass h1,
-.liquid-glass h2 { color: #fff; }
-.glass-card .auth-header p,
-.liquid-glass p { color: rgba(255, 255, 255, 0.85); }
-.glass-card label,
-.liquid-glass label { color: #fff; }
+.glass-card .auth-header h1 { color: #fff; }
+.glass-card .auth-header p { color: rgba(255, 255, 255, 0.85); }
+.glass-card label { color: #fff; }
 
 .glass-card input[type="text"],
 .glass-card input[type="email"],
-.glass-card input[type="password"],
-.liquid-glass input[type="text"],
-.liquid-glass input[type="email"],
-.liquid-glass input[type="number"] {
+.glass-card input[type="password"] {
   background: rgba(255, 255, 255, 0.16);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
 }
 
-.glass-card input::placeholder,
-.liquid-glass input::placeholder { color: rgba(255, 255, 255, 0.7); }
+.glass-card input::placeholder { color: rgba(255, 255, 255, 0.7); }
 
-.glass-card input:focus,
-.liquid-glass input:focus {
+.glass-card input:focus {
   background: rgba(255, 255, 255, 0.26);
   border-color: #fff;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
@@ -911,9 +1115,25 @@ tr:last-child td { border-bottom: none; }
 .glass-card .auth-footer { color: rgba(255, 255, 255, 0.85); }
 .glass-card .auth-footer a { color: #fff; font-weight: 600; text-decoration: underline; }
 
-.liquid-glass.section-title,
-.liquid-glass .section-title { color: #fff; }
-.liquid-glass .section-subtitle { color: rgba(255, 255, 255, 0.85); }
+/* .liquid-glass on the vivid gradient page (About) — same white treatment
+   as .glass-card, since the backdrop there is guaranteed high-contrast. */
+.glass-page .liquid-glass h1,
+.auth-glass-page .liquid-glass h1,
+.glass-page .liquid-glass .auth-header h1,
+.auth-glass-page .liquid-glass .auth-header h1 { color: #fff; }
+
+.glass-page .liquid-glass p,
+.auth-glass-page .liquid-glass p,
+.glass-page .liquid-glass .auth-header p,
+.auth-glass-page .liquid-glass .auth-header p { color: rgba(255, 255, 255, 0.85); }
+
+.glass-page .liquid-glass label,
+.auth-glass-page .liquid-glass label { color: #fff; }
+
+.glass-page .liquid-glass .section-title,
+.auth-glass-page .liquid-glass .section-title { color: #fff; }
+.glass-page .liquid-glass .section-subtitle,
+.auth-glass-page .liquid-glass .section-subtitle { color: rgba(255, 255, 255, 0.85); }
 
 /* ---------- Table responsiveness ---------- */
 .table-responsive {
