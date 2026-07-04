@@ -1,8 +1,14 @@
-{% extends "base.html" %}
+{% extends "admin/layout.html" %}
 {% block title %}All bookings — StayNova{% endblock %}
-{% block content %}
-<section class="section container">
-  <h1 class="section-title">All bookings</h1>
+{% block admin_content %}
+<div class="admin-topbar">
+  <div>
+    <h1>All bookings</h1>
+    <p>Every booking made across all hotels.</p>
+  </div>
+</div>
+
+<div class="admin-panel">
   <div class="table-responsive">
   <table>
     <thead><tr><th>Guest</th><th>Hotel</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Total</th><th>Status</th></tr></thead>
@@ -21,5 +27,5 @@
     </tbody>
   </table>
   </div>
-</section>
+</div>
 {% endblock %}

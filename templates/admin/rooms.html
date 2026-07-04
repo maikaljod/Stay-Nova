@@ -1,27 +1,33 @@
-{% extends "base.html" %}
+{% extends "admin/layout.html" %}
 {% block title %}Manage rooms — {{ hotel.name }}{% endblock %}
-{% block content %}
-<section class="section container">
-  <a href="{{ url_for('admin.hotels') }}" class="btn btn-outline btn-sm">&larr; Back to hotels</a>
-  <h1 class="section-title mt-lg">Rooms — {{ hotel.name }}</h1>
+{% block admin_content %}
+<a href="{{ url_for('admin.hotels') }}" class="btn btn-outline btn-sm">&larr; Back to hotels</a>
 
-  <div class="card">
-    <h2 style="margin-top:0;">Add a room</h2>
-    <form method="post" novalidate>
-      {{ form.hidden_tag() }}
-      <div class="form-group">{{ form.room_type.label }}{{ form.room_type() }}</div>
-      <div class="form-row">
-        <div class="form-group">{{ form.price_per_night.label }}{{ form.price_per_night() }}</div>
-        <div class="form-group">{{ form.capacity.label }}{{ form.capacity() }}</div>
-        <div class="form-group">{{ form.total_rooms.label }}{{ form.total_rooms() }}</div>
-      </div>
-      <div class="form-group">{{ form.image_url.label }}{{ form.image_url(placeholder="https://...") }}</div>
-      <div class="form-group">{{ form.description.label }}{{ form.description(rows=3) }}</div>
-      {{ form.submit(class="btn btn-primary") }}
-    </form>
+<div class="admin-topbar mt-lg">
+  <div>
+    <h1>Rooms — {{ hotel.name }}</h1>
+    <p>Add and manage room types for this hotel.</p>
   </div>
+</div>
 
-  <h2 class="mt-lg">Existing rooms</h2>
+<div class="admin-panel">
+  <h2 style="margin-top:0;">Add a room</h2>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="form-group">{{ form.room_type.label }}{{ form.room_type() }}</div>
+    <div class="form-row">
+      <div class="form-group">{{ form.price_per_night.label }}{{ form.price_per_night() }}</div>
+      <div class="form-group">{{ form.capacity.label }}{{ form.capacity() }}</div>
+      <div class="form-group">{{ form.total_rooms.label }}{{ form.total_rooms() }}</div>
+    </div>
+    <div class="form-group">{{ form.image_url.label }}{{ form.image_url(placeholder="https://...") }}</div>
+    <div class="form-group">{{ form.description.label }}{{ form.description(rows=3) }}</div>
+    {{ form.submit(class="btn btn-shine") }}
+  </form>
+</div>
+
+<div class="admin-panel mt-lg">
+  <h2 style="margin-top:0;">Existing rooms</h2>
   <div class="table-responsive">
   <table>
     <thead><tr><th>Type</th><th>Price/night</th><th>Capacity</th><th>Total</th><th></th></tr></thead>
@@ -43,5 +49,5 @@
     </tbody>
   </table>
   </div>
-</section>
+</div>
 {% endblock %}

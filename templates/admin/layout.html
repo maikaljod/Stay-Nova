@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-shell container">
+  <aside class="admin-sidebar liquid-glass">
+    <div class="admin-sidebar-brand">
+      <span class="admin-badge">Admin panel</span>
+    </div>
+    <nav class="admin-nav">
+      <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </a>
+      <a href="{{ url_for('admin.hotels') }}" class="{{ 'active' if request.endpoint in ('admin.hotels', 'admin.rooms') }}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 21v-4h6v4"/></svg>
+        Hotels
+      </a>
+      <a href="{{ url_for('admin.bookings') }}" class="{{ 'active' if request.endpoint == 'admin.bookings' }}">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Bookings
+      </a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="{{ url_for('main.index') }}" class="admin-exit-link">&larr; Back to site</a>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    {% block admin_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

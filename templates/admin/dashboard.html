@@ -1,18 +1,94 @@
-{% extends "base.html" %}
+{% extends "admin/layout.html" %}
 {% block title %}Admin dashboard — StayNova{% endblock %}
-{% block content %}
-<section class="section container">
-  <h1 class="section-title">Admin dashboard</h1>
-  <div class="stats-grid">
-    <div class="stat-card"><div class="value">{{ stats.hotels }}</div><div class="label">Hotels</div></div>
-    <div class="stat-card"><div class="value">{{ stats.rooms }}</div><div class="label">Room types</div></div>
-    <div class="stat-card"><div class="value">{{ stats.users }}</div><div class="label">Users</div></div>
-    <div class="stat-card"><div class="value">{{ stats.bookings }}</div><div class="label">Active bookings</div></div>
-    <div class="stat-card"><div class="value">${{ '%.2f'|format(stats.revenue) }}</div><div class="label">Revenue</div></div>
+{% block admin_content %}
+<div class="admin-topbar">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Welcome back — here's what's happening today.</p>
   </div>
+</div>
+
+<div class="admin-stats-grid">
+  <div class="admin-stat-card">
+    <div class="admin-stat-icon icon-blue">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 21v-4h6v4"/></svg>
+    </div>
+    <div>
+      <div class="admin-stat-value">{{ stats.hotels }}</div>
+      <div class="admin-stat-label">Hotels</div>
+    </div>
+  </div>
+
+  <div class="admin-stat-card">
+    <div class="admin-stat-icon icon-purple">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </div>
+    <div>
+      <div class="admin-stat-value">{{ stats.rooms }}</div>
+      <div class="admin-stat-label">Room types</div>
+    </div>
+  </div>
+
+  <div class="admin-stat-card">
+    <div class="admin-stat-icon icon-teal">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div>
+      <div class="admin-stat-value">{{ stats.users }}</div>
+      <div class="admin-stat-label">Users</div>
+    </div>
+  </div>
+
+  <div class="admin-stat-card">
+    <div class="admin-stat-icon icon-amber">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    </div>
+    <div>
+      <div class="admin-stat-value">{{ stats.bookings }}</div>
+      <div class="admin-stat-label">Active bookings</div>
+    </div>
+  </div>
+
+  <div class="admin-stat-card">
+    <div class="admin-stat-icon icon-green">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+    </div>
+    <div>
+      <div class="admin-stat-value">${{ '%.2f'|format(stats.revenue) }}</div>
+      <div class="admin-stat-label">Revenue</div>
+    </div>
+  </div>
+</div>
+
+<div class="admin-panel">
   <div class="flex-between">
-    <a class="btn btn-primary" href="{{ url_for('admin.hotels') }}">Manage hotels</a>
-    <a class="btn btn-outline" href="{{ url_for('admin.bookings') }}">View all bookings</a>
+    <h2>Recent bookings</h2>
+    <a class="btn btn-outline btn-sm" href="{{ url_for('admin.bookings') }}">View all</a>
   </div>
-</section>
+  {% if recent_bookings %}
+  <div class="table-responsive mt-lg">
+    <table>
+      <thead><tr><th>Guest</th><th>Hotel</th><th>Check-in</th><th>Total</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for b in recent_bookings %}
+        <tr>
+          <td>{{ b.first_name }} {{ b.last_name }}</td>
+          <td>{{ b.hotel_name }}</td>
+          <td>{{ b.check_in }}</td>
+          <td>${{ '%.2f'|format(b.total_price) }}</td>
+          <td><span class="status-badge status-{{ b.status }}">{{ b.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">No bookings yet.</div>
+  {% endif %}
+</div>
+
+<div class="flex-between mt-lg">
+  <a class="btn btn-shine" href="{{ url_for('admin.hotels') }}">Manage hotels</a>
+  <a class="btn btn-outline" href="{{ url_for('admin.bookings') }}">View all bookings</a>
+</div>
 {% endblock %}

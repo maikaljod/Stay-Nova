@@ -21,7 +21,8 @@ admin_bp = Blueprint("admin", __name__)
 @admin_required
 def dashboard():
     stats = get_admin_stats()
-    return render_template("admin/dashboard.html", stats=stats)
+    recent_bookings = get_all_bookings()[:5]
+    return render_template("admin/dashboard.html", stats=stats, recent_bookings=recent_bookings)
 
 
 @admin_bp.route("/hotels", methods=["GET", "POST"])
