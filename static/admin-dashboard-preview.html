@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayNova — Admin dashboard preview</title>
+<link rel="icon" type="image/svg+xml" href="img/logo.svg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  (function () {
+    var stored = localStorage.getItem("theme");
+    var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    if (theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  })();
+</script>
+<style>
+  .preview-banner {
+    background: #111827;
+    color: #fff;
+    text-align: center;
+    font-size: 0.82rem;
+    padding: 8px 16px;
+  }
+  .preview-banner strong { color: #fbbf24; }
+</style>
+</head>
+<body>
+  <div class="preview-banner">
+    <strong>UI preview</strong> — sample data, showing the new admin dashboard sidebar and stat cards.
+  </div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="#">
+        <img src="img/logo.svg" alt="" width="30" height="30" class="brand-logo">
+        StayNova
+      </a>
+      <div class="navbar-right">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <span class="icon-moon">&#127769;</span>
+          <span class="icon-sun">&#9728;</span>
+        </button>
+        <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+        <ul class="nav-links">
+          <li><a href="#">Hotels</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Admin</a></li>
+          <li><a href="#">My bookings</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="admin-shell container">
+      <aside class="admin-sidebar liquid-glass">
+        <div class="admin-sidebar-brand">
+          <span class="admin-badge">Admin panel</span>
+        </div>
+        <nav class="admin-nav">
+          <a href="#" class="active">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            Dashboard
+          </a>
+          <a href="#">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 21v-4h6v4"/></svg>
+            Hotels
+          </a>
+          <a href="#">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Bookings
+          </a>
+        </nav>
+        <div class="admin-sidebar-footer">
+          <a href="#" class="admin-exit-link">&larr; Back to site</a>
+        </div>
+      </aside>
+
+      <div class="admin-main">
+        <div class="admin-topbar">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back — here's what's happening today.</p>
+          </div>
+        </div>
+
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon icon-blue">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1M14 9h1M9 13h1M14 13h1M9 21v-4h6v4"/></svg>
+            </div>
+            <div>
+              <div class="admin-stat-value">6</div>
+              <div class="admin-stat-label">Hotels</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon icon-purple">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </div>
+            <div>
+              <div class="admin-stat-value">18</div>
+              <div class="admin-stat-label">Room types</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon icon-teal">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div class="admin-stat-value">142</div>
+              <div class="admin-stat-label">Users</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon icon-amber">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <div>
+              <div class="admin-stat-value">37</div>
+              <div class="admin-stat-label">Active bookings</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon icon-green">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div>
+              <div class="admin-stat-value">$18,420.00</div>
+              <div class="admin-stat-label">Revenue</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="flex-between">
+            <h2>Recent bookings</h2>
+            <a class="btn btn-outline btn-sm" href="#">View all</a>
+          </div>
+          <div class="table-responsive mt-lg">
+            <table>
+              <thead><tr><th>Guest</th><th>Hotel</th><th>Check-in</th><th>Total</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Priya Sharma</td>
+                  <td>Marina Bay Suites</td>
+                  <td>2026-08-02</td>
+                  <td>$756.00</td>
+                  <td><span class="status-badge status-confirmed">confirmed</span></td>
+                </tr>
+                <tr>
+                  <td>James Carter</td>
+                  <td>Lakeside Haven Resort</td>
+                  <td>2026-08-05</td>
+                  <td>$426.00</td>
+                  <td><span class="status-badge status-confirmed">confirmed</span></td>
+                </tr>
+                <tr>
+                  <td>Amara Okafor</td>
+                  <td>Coastal Palm Hotel</td>
+                  <td>2026-07-20</td>
+                  <td>$495.00</td>
+                  <td><span class="status-badge status-completed">completed</span></td>
+                </tr>
+                <tr>
+                  <td>Liam Chen</td>
+                  <td>Downtown Skyline Hotel</td>
+                  <td>2026-07-15</td>
+                  <td>$220.00</td>
+                  <td><span class="status-badge status-cancelled">cancelled</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="flex-between mt-lg">
+          <a class="btn btn-shine" href="#">Manage hotels</a>
+          <a class="btn btn-outline" href="#">View all bookings</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

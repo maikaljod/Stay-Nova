@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayNova — Hotels filters preview</title>
+<link rel="icon" type="image/svg+xml" href="img/logo.svg">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  (function () {
+    var stored = localStorage.getItem("theme");
+    var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    if (theme === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  })();
+</script>
+<style>
+  .preview-banner {
+    background: #111827;
+    color: #fff;
+    text-align: center;
+    font-size: 0.82rem;
+    padding: 8px 16px;
+  }
+  .preview-banner strong { color: #fbbf24; }
+</style>
+</head>
+<body>
+  <div class="preview-banner">
+    <strong>UI preview</strong> — sample data, showing the new price/star/amenities filters and sort.
+  </div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="#">
+        <img src="img/logo.svg" alt="" width="30" height="30" class="brand-logo">
+        StayNova
+      </a>
+      <div class="navbar-right">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <span class="icon-moon">&#127769;</span>
+          <span class="icon-sun">&#9728;</span>
+        </button>
+        <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
+        <ul class="nav-links">
+          <li><a href="#">Hotels</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Log in</a></li>
+          <li><a class="nav-cta" href="#">Sign up</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section container">
+      <div class="flex-between">
+        <div>
+          <h1 class="section-title">All hotels</h1>
+          <p class="section-subtitle">4 properties found</p>
+        </div>
+      </div>
+
+      <div class="hotels-layout">
+        <aside class="filters-panel liquid-glass">
+          <h3>Filters</h3>
+          <form onsubmit="return false;">
+            <div class="form-group">
+              <label for="city">Destination</label>
+              <input type="text" id="city" name="city" placeholder="City">
+            </div>
+            <div class="form-group">
+              <label for="guests">Guests</label>
+              <input type="number" id="guests" name="guests" min="1" max="20" value="2">
+            </div>
+            <div class="form-group">
+              <label>Price per night</label>
+              <div class="form-row">
+                <input type="number" name="min_price" min="0" placeholder="Min" value="100">
+                <input type="number" name="max_price" min="0" placeholder="Max" value="300">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="star_rating">Star rating</label>
+              <select id="star_rating" name="star_rating">
+                <option value="">Any</option>
+                <option value="5">5 stars</option>
+                <option value="4" selected>4+ stars</option>
+                <option value="3">3+ stars</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amenities</label>
+              <div class="filter-checkboxes">
+                <label class="checkbox-pill"><input type="checkbox" checked> Free WiFi</label>
+                <label class="checkbox-pill"><input type="checkbox"> Pool</label>
+                <label class="checkbox-pill"><input type="checkbox" checked> Parking</label>
+                <label class="checkbox-pill"><input type="checkbox"> Restaurant</label>
+                <label class="checkbox-pill"><input type="checkbox"> Private Beach</label>
+                <label class="checkbox-pill"><input type="checkbox"> Gym</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="sort">Sort by</label>
+              <select id="sort" name="sort">
+                <option value="">Recommended</option>
+                <option value="price_asc" selected>Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="rating_desc">Rating: High to Low</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-shine btn-block">Apply filters</button>
+            <a href="#" class="btn btn-outline btn-block mt-sm">Clear filters</a>
+          </form>
+        </aside>
+
+        <div class="hotels-results">
+          <div class="grid">
+
+            <a class="flip-card scroll-reveal in-view" href="#">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80" alt="Marina Bay Suites">
+                  <div class="hotel-card-body">
+                    <h3>Marina Bay Suites</h3>
+                    <div class="hotel-meta">&#128205; Singapore</div>
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <div class="hotel-meta">From $189/night</div>
+                  </div>
+                </div>
+                <div class="flip-card-back">
+                  <h3>Marina Bay Suites</h3>
+                  <p>Skyline views, infinity pool, and a five-minute walk to the waterfront promenade.</p>
+                  <span class="btn btn-primary btn-sm">View details</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="flip-card scroll-reveal in-view" href="#">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80" alt="Lakeside Haven Resort">
+                  <div class="hotel-card-body">
+                    <h3>Lakeside Haven Resort</h3>
+                    <div class="hotel-meta">&#128205; Lake Tahoe</div>
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;</div>
+                    <div class="hotel-meta">From $142/night</div>
+                  </div>
+                </div>
+                <div class="flip-card-back">
+                  <h3>Lakeside Haven Resort</h3>
+                  <p>A tranquil lakefront resort with private beach access and kayak rentals.</p>
+                  <span class="btn btn-primary btn-sm">View details</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="flip-card scroll-reveal in-view" href="#">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=900&q=80" alt="Coastal Palm Hotel">
+                  <div class="hotel-card-body">
+                    <h3>Coastal Palm Hotel</h3>
+                    <div class="hotel-meta">&#128205; Miami</div>
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;</div>
+                    <div class="hotel-meta">From $165/night</div>
+                  </div>
+                </div>
+                <div class="flip-card-back">
+                  <h3>Coastal Palm Hotel</h3>
+                  <p>Beachfront rooms, rooftop bar, and easy access to South Beach nightlife.</p>
+                  <span class="btn btn-primary btn-sm">View details</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="flip-card scroll-reveal in-view" href="#">
+              <div class="flip-card-inner">
+                <div class="flip-card-front">
+                  <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80" alt="Downtown Skyline Hotel">
+                  <div class="hotel-card-body">
+                    <h3>Downtown Skyline Hotel</h3>
+                    <div class="hotel-meta">&#128205; Chicago</div>
+                    <div class="stars">&#9733;&#9733;&#9733;&#9733;</div>
+                    <div class="hotel-meta">From $110/night</div>
+                  </div>
+                </div>
+                <div class="flip-card-back">
+                  <h3>Downtown Skyline Hotel</h3>
+                  <p>Modern rooms in the heart of downtown, steps from the river walk.</p>
+                  <span class="btn btn-primary btn-sm">View details</span>
+                </div>
+              </div>
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
