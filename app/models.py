@@ -469,6 +469,37 @@ def get_all_bookings():
     )
 
 
+def get_all_users_with_booking_counts():
+    """Every user plus how many bookings they've made, for the admin
+    "Manage users" table. LEFT JOIN so users with zero bookings still
+    show up (with a count of 0) instead of being dropped."""
+    return query(
+        """SELECT users.id, users.first_name, users.last_name, users.email, users.role,
+                  COUNT(bookings.id) AS booking_count
+           FROM users
+           LEFT JOIN bookings ON bookings.user_id = users.id
+           GROUP BY users.id, users.first_name, users.last_name, users.email, users.role
+           ORDER BY users.id ASC"""
+    )
+
+
+def count_admins():
+    row = query("SELECT COUNT(*) AS c FROM users WHERE role = 'admin'", fetch="one")
+    return row["c"]
+
+
+def update_user_profile(user_id, first_name, last_name, email, role):
+    execute(
+        """UPDATE users SET first_name = %s, last_name = %s, email = %s, role = %s
+           WHERE id = %s""",
+        (first_name.strip(), last_name.strip(), email.lower().strip(), role, user_id),
+    )
+
+
+def delete_user(user_id):
+    execute("DELETE FROM users WHERE id = %s", (user_id,))
+
+
 def get_admin_stats():
     hotels = query("SELECT COUNT(*) AS c FROM hotels", fetch="one")["c"]
     rooms = query("SELECT COUNT(*) AS c FROM rooms", fetch="one")["c"]
