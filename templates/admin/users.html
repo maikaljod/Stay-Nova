@@ -1,0 +1,57 @@
+{% extends "admin/layout.html" %}
+{% block title %}Manage users — StayNova{% endblock %}
+{% block admin_content %}
+<div class="admin-topbar">
+  <div>
+    <h1>Manage users</h1>
+    <p>Update roles or remove accounts. Changes save per row.</p>
+  </div>
+</div>
+
+<div class="admin-panel">
+  {% for user in users %}
+  <form id="update-form-{{ user.id }}" method="post" action="{{ url_for('admin.update_user_route', user_id=user.id) }}" class="hidden-row-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  </form>
+  <form id="delete-form-{{ user.id }}" method="post" action="{{ url_for('admin.delete_user_route', user_id=user.id) }}" class="hidden-row-form" data-confirm="Remove this user? This also deletes their bookings and reviews.">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  </form>
+  {% endfor %}
+
+  <div class="table-responsive">
+  <table class="users-table">
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Role</th><th>Bookings</th><th colspan="2">Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>
+          <input type="text" name="full_name" value="{{ user.first_name }} {{ user.last_name }}" class="row-input" form="update-form-{{ user.id }}" required>
+        </td>
+        <td>
+          <input type="email" name="email" value="{{ user.email }}" class="row-input" form="update-form-{{ user.id }}" required>
+        </td>
+        <td>
+          <select name="role" class="row-input row-select" form="update-form-{{ user.id }}">
+            <option value="user" {{ "selected" if user.role == "user" }}>User</option>
+            <option value="admin" {{ "selected" if user.role == "admin" }}>Admin</option>
+          </select>
+        </td>
+        <td>{{ user.booking_count }}</td>
+        <td>
+          <button type="submit" form="update-form-{{ user.id }}" class="btn btn-shine btn-sm">Save</button>
+        </td>
+        <td>
+          <button type="submit" form="delete-form-{{ user.id }}" class="btn btn-danger btn-sm">Delete</button>
+        </td>
+      </tr>
+      {% endfor %}
+      {% if not users %}
+      <tr><td colspan="6" class="empty-state">No users yet.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}
