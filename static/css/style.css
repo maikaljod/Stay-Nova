@@ -806,6 +806,19 @@ tr:last-child td { border-bottom: none; }
 
 .admin-panel h2 { font-size: 1.15rem; }
 
+/* ---------- Manage users table (inline-editable rows) ---------- */
+.users-table td { vertical-align: middle; }
+.hidden-row-form { display: none; }
+.row-input {
+  width: 100%;
+  min-width: 140px;
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 0.88rem;
+}
+.row-select { min-width: 100px; cursor: pointer; }
+.users-table .btn-sm { white-space: nowrap; }
+
 @media (max-width: 1023px) {
   .admin-shell { grid-template-columns: 1fr; }
   .admin-sidebar { position: static; }
