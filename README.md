@@ -1,3 +1,4 @@
+
 # StayNova
 
 StayNova is a secure hotel booking web application built with Flask, MySQL, HTML, CSS, and JavaScript.
@@ -10,3 +11,6 @@ StayNova is a secure hotel booking web application built with Flask, MySQL, HTML
 - Hotel Booking
 - Booking History
 - User Profile
+
+
+
